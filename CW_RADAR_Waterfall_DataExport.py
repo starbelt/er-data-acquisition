@@ -20,11 +20,15 @@
 #
 # See the LICENSE file for the license.
 
+#type: ignore
+
 # Imports
 import adi
 
 import sys
+import os
 import time
+import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 import pyqtgraph as pg
@@ -38,6 +42,9 @@ rpi_ip = "ip:phaser.local"  # IP address of the Raspberry Pi
 sdr_ip = "ip:192.168.2.1"  # IP address of the Transceiver Block 192.168.2.1 or pluto.local
 my_sdr = adi.ad9361(uri=sdr_ip)  # Initialize SDR
 my_phaser = adi.CN0566(uri=rpi_ip, sdr=my_sdr)  # Initialize Phaser
+
+# Time start for log exports
+start_time = datetime.datetime.now()  # Get start time
 
 # Initialize both ADAR1000s, set gains to max, and all phases to 0
 my_phaser.configure(device_mode="rx")  # Configure Phaser in Rx mode
@@ -243,7 +250,7 @@ win = Window()  # Create window instance
 win.setWindowState(QtCore.Qt.WindowMaximized)  # Maximize window
 index = 0  # Initialize index
 
-def export_raw_data_to_csv(data, filename="raw_data.csv"):
+def export_raw_data_to_csv(data):
     """ Exports the received data to a CSV file
     Args:
         data (np.array): The data to export
@@ -251,13 +258,18 @@ def export_raw_data_to_csv(data, filename="raw_data.csv"):
     Returns:
         None
     """
-    with open(filename, mode='w', newline='') as file:
+    current_time = datetime.datetime.now()  # Get current time
+    time_since_start = (current_time - start_time).total_seconds()  # Calculate time since start in seconds
+    filename = "raw_data_" + str(start_time) + ".csv"  # Create filename
+    file_exists = os.path.isfile(filename)  # Check if file exists
+    with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["Index", "Value"])
+        if not file_exists:
+            writer.writerow(["Timestamp", "Time Since Start (s)","Index", "Value"])
         for index, value in enumerate(data):
-            writer.writerow([index, value])
+            writer.writerow([current_time, time_since_start, index, value])
 
-def export_fft_data_to_csv(freq, s_dbfs, filename="fft_data.csv"):
+def export_fft_data_to_csv(freq, s_dbfs):
     """ Exports the frequency and FFT magnitude data to a CSV file
     Args:
         freq (np.array): The frequency data
@@ -266,11 +278,16 @@ def export_fft_data_to_csv(freq, s_dbfs, filename="fft_data.csv"):
     Returns:
         None
     """
-    with open(filename, mode='w', newline='') as file:
+    current_time = datetime.datetime.now()  # Get current time
+    time_since_start = (current_time - start_time).total_seconds()  # Calculate time since start in seconds
+    filename = "fft_data_" + str(start_time) + ".csv"  # Create filename
+    file_exists = os.path.isfile(filename)  # Check if file exists
+    with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["Frequency (Hz)", "Magnitude (dBFS)"])
+        if not file_exists:
+            writer.writerow(["Timestamp", "Time Since Start (s)", "Frequency (Hz)", "Magnitude (dBFS)"])
         for f, mag in zip(freq, s_dbfs):
-            writer.writerow([f, mag])
+            writer.writerow([current_time, time_since_start, f, mag])
 
 def update():
     """ Updates the FFT in the window
