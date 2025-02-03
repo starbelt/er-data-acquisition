@@ -110,6 +110,8 @@ c = 3e8  # Speed of light
 N_frame = fft_size  # Frame size
 freq = np.linspace(-fs / 2, fs / 2, int(N_frame))  # Frequency array
 
+index = 0  # Initialize index
+
 def export_raw_data_to_csv(data):
     """ Exports the received data to a CSV file
     Args:
