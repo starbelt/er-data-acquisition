@@ -97,11 +97,11 @@ Utilized CN0566 Phased Array (Phaser) Development Platform. The hardware include
   - ADAR1000 Beamformer (8 - 16 GHz, 4-Channel, 360° phase adjustment with 2.8° resolution, set to receive only)
   - Raspberry Pi 4: Micro-computer for I/O control signals
   - ADALM-Pluto: Analog to Digital DAQ (send and receive)
-  - HB100: Microwave Source
   - LTC5548: Mixer (2.2 GHz output)
-  - 5 V Wall Adapter: 3 A, USB-C
   - 16GB SD Card: With ADI Kuiper Linux Image
-  - Tripod: For Mounting CN0566
+- **HB100: Microwave Source**
+- **5 V Wall Adapter: 3 A, USB-C** 
+- **Tripod: For Mounting CN0566**
 
 ## License
 This project is licensed under the terms of the Analog Devices License.
