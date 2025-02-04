@@ -8,9 +8,7 @@ This repository contains scripts for Continuous Wave (CW) and Frequency Modulate
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [CW Radar Waterfall Data Export](#cw-radar-waterfall-data-export)
-  - [CW Radar Waterfall Data Playback](#cw-radar-waterfall-data-playback)
-  - [FMCW Radar Waterfall Chirp Sync](#fmcw-radar-waterfall-chirp-sync)
+<!-- Add usage sections -->
 - [Hardware](#hardware)
 - [License](#license)
 
