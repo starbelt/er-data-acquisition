@@ -1,0 +1,2 @@
+This repository contains scripts for Continuous Wave (CW) and Frequency Modulated Continuous Wave (FMCW) radar signal acquisition using Software Defined Radio (SDR) and Phaser devices. The scripts configure the devices, acquire radar signals, and display interactive FFT and waterfall plots using PyQt5 and pyqtgraph, or simply export the data without the interactive displays.
+The CW and FMCW scripts also have multiple variations that incorporate enhancements, such as chirp synchronization or constant false alarm rate (CFAR) filtering.
