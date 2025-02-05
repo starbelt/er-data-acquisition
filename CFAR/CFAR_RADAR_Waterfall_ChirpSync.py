@@ -609,7 +609,7 @@ def update():
         win.img_array[0] = s_dbfs
     win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])
     win.imageitem.setImage(win.img_array, autoLevels=False)
-
+    
     if index == 1:
         win.fft_plot.enableAutoRange("xy", False)
     index = index + 1
