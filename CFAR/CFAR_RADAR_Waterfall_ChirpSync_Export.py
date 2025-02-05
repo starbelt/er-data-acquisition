@@ -573,8 +573,8 @@ def store_data(freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold):
     """
     current_time = datetime.datetime.now()  # Get current time
     time_since_start = (current_time - start_time).total_seconds()  # Calculate time since start in seconds
-    for f, mag in zip(freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold):
-        data_list.append([current_time, time_since_start, f, mag])
+    for f, mag, cfar_mag, threshold in zip(freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold):
+        data_list.append([current_time, time_since_start, f, mag, cfar_mag, threshold])
 
 def export_data_to_csv():
     """ Exports the stored data to a CSV file
