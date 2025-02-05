@@ -18,7 +18,7 @@ import os
 import datetime
 import numpy as np
 import pyqtgraph as pg
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QElapsedTimer, QCoreApplication
 from PyQt5.QtWidgets import *
 from pyqtgraph.Qt import QtCore, QtGui
 import csv
@@ -31,6 +31,8 @@ num_slices = 50  # Number of slices for waterfall plot
 fft_size = 1024 * 64  # FFT size
 img_array = np.ones((num_slices, fft_size)) * (-100)  # Initialize image array
 freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))  # Frequency array
+last_error_time = None  # Global variable to keep track of the last error time
+previous_time_since_start = 0  # Global variable to keep track of the previous time since start
 
 class Window(QMainWindow):
     def __init__(self):
@@ -59,6 +61,12 @@ class Window(QMainWindow):
         control_label.setAlignment(Qt.AlignHCenter)  # Center align | Qt.AlignVCenter
         layout.addWidget(control_label, 0, 0, 1, 2)  # Add to layout
 
+        # Time since start label
+        self.time_label = QLabel("Time Since Start: 0.0 s")  # Create time label
+        self.time_label.setFont(font)  # Apply font
+        self.time_label.setAlignment(Qt.AlignCenter)  # Center align
+        layout.addWidget(self.time_label, 1, 0, 1, 2)  # Add to layout
+        
         # Buttons        
         self.quit_button = QPushButton("Quit")  # Create quit button
         self.quit_button.pressed.connect(self.end_program)  # Connect to end_program
@@ -85,7 +93,7 @@ class Window(QMainWindow):
         self.high_slider.valueChanged.connect(self.get_water_levels)  # Connect to get_water_levels
         layout.addWidget(self.high_slider, 10, 0)  # Add to layout
 
-        self.water_label = QLabel("Waterfall Intensity Levels")  # Create water label
+        self.water_label = QLabel("Waterfall Intensity Levels")  # Create waterfall label
         self.water_label.setFont(font)  # Apply font
         self.water_label.setAlignment(Qt.AlignCenter)  # Center align
         self.water_label.setMinimumWidth(300)  # Set minimum width
@@ -157,46 +165,83 @@ class Window(QMainWindow):
         """
         self.close()  # Close window
 
-def read_csv_data(filename):
+def read_csv_data(filename, is_fft=False):
     """ Reads data from a CSV file
     Args:
         filename (str): The filename of the CSV file
+        is_fft (bool): Flag to indicate if the file is FFT data
     Returns:
         list: A list of rows from the CSV file
     """
     if not os.path.exists(filename):
         raise FileNotFoundError(f"File {filename} does not exist")  # Raise error if file does not exist
     data = []  # Initialize data
-    with open(filename, mode='r') as file: # Open CSV file
-        reader = csv.reader(file) # Create CSV reader
+    with open(filename, mode='r') as file:  # Open CSV file
+        reader = csv.reader(file)  # Create CSV reader
         next(reader)  # Skip header
-        for row in reader: # Iterate through rows
-            data.append(row) # Append row to data
-    return data # Return data
+        for row in reader:  # Iterate through rows
+            if is_fft:
+                # For FFT data, keep timestamp as string, time since start as float, and convert frequency and magnitude values to float
+                data.append([row[0], float(row[1]), float(row[2]), float(row[3])])  # Append row to data
+            else:
+                # For raw data, keep timestamp as string, time since start as float, and convert index to int and value to complex
+                data.append([row[0], float(row[1]), int(row[2]), complex(row[3])])  # Append row to data
+    return data  # Return data
 
 def update():
     """ Updates the FFT and waterfall plots in the window
     Returns:
         None
     """
-    global index, freq, dist, raw_data, fft_data # Global variables
+    global index, freq, dist, raw_data, fft_data, last_error_time, previous_time_since_start  # Global variables
     label_style = {"color": "#FFF", "font-size": "14pt"}  # Label style
 
-    if index < len(fft_data): # Check if index is less than length of FFT data
-        current_fft = fft_data[index] # Get current FFT data
-        s_dbfs = [float(mag) for mag in current_fft[3:]]  # Extract magnitude data from CSV row
+    if index < len(fft_data):  # Check if index is less than length of FFT data
+        s_dbfs = [row[3] for row in fft_data[index:index + fft_size]]  # Extract magnitude data for all frequencies at current time step
+        current_time_since_start = fft_data[index][1]
+        # Ensure s_dbfs is a numpy array and has the correct shape
+        s_dbfs = np.array(s_dbfs)
+        mismatch = False
+        if s_dbfs.shape[0] != freq.shape[0]:
+            mismatch = True
+            temp_freq = freq[:s_dbfs.shape[0]]
+            if last_error_time != current_time_since_start: #Error logging, but only for non-repeating errors
+                last_error_time = current_time_since_start
+                # Truncate freq to match the size of s_dbfs
+                raise ValueError(f"Shape mismatch: freq has shape {freq.shape}, but s_dbfs has shape {s_dbfs.shape} at time {current_time_since_start}. Truncated freq to shape {freq.shape}")
+        
+        # Calculate the delta time and delay the update
+        delta_time = (current_time_since_start - previous_time_since_start) * 1000  # Convert to milliseconds
+        previous_time_since_start = current_time_since_start
 
-        win.fft_curve.setData(freq, s_dbfs)  # Update FFT curve
-        win.fft_plot.setLabel("bottom", text="Frequency", units="Hz", **label_style)  # Update label
+        # Wait for the delta time to pass
+        timer = QElapsedTimer()
+        timer.start()
+        while timer.elapsed() < delta_time:
+            QCoreApplication.processEvents()
 
+        # Update graph components
         win.img_array = np.roll(win.img_array, 1, axis=0)  # Roll image array
-        win.img_array[0] = s_dbfs  # Update image array
+        
+        if mismatch:
+            padded_s_dbfs = np.pad(s_dbfs, (0, fft_size - s_dbfs.shape[0]), 'constant')
+            win.fft_curve.setData(temp_freq, s_dbfs)  # Update FFT curve
+            win.img_array[0] = padded_s_dbfs  # Update image array
+        else:
+            win.fft_curve.setData(freq, s_dbfs)  # Update FFT curve
+            win.img_array[0] = s_dbfs  # Update image array
+        win.fft_plot.setLabel("bottom", text="Frequency", units="Hz", **label_style)  # Update label
         win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])  # Update levels
         win.imageitem.setImage(win.img_array, autoLevels=False)  # Update image
+        
+        # Update the time label with the current time since start
+        win.time_label.setText(f"Time Since Start: {current_time_since_start:.2f} s")
 
-        if index == 1: # Check if index is 1
+        if index == 1:  # Check if index is 1
             win.fft_plot.enableAutoRange("xy", False)  # Disable auto range
-        index += 1  # Increment index
+        index += fft_size  # Increment index
+        mismatch = False
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CW RADAR Waterfall Data Playback")  # Create argument parser
@@ -214,7 +259,12 @@ if __name__ == "__main__":
 
     # Read data from CSV files
     raw_data = read_csv_data(args.raw_data_file)
-    fft_data = read_csv_data(args.fft_data_file)
+    fft_data = read_csv_data(args.fft_data_file, is_fft=True)
+    
+    # Print out a sample of the data for debugging
+    # print("Sample raw_data:", raw_data[:5])
+    # print("Sample fft_data:", fft_data[:5])
+    # print("Shape of fft_data:", np.array(fft_data).shape)
 
     timer = QtCore.QTimer()  # Create timer
     timer.timeout.connect(update)  # Connect timer to update
