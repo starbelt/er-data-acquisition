@@ -7,8 +7,7 @@ This repository contains scripts for Continuous Wave (CW) and Frequency Modulate
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Usage](#usage)
-<!-- Add usage sections -->
+- [Usage](#usage) <!-- Add usage sections -->
 - [Hardware](#hardware)
 - [License](#license)
 
