@@ -108,7 +108,7 @@ python CFAR/CFAR_RADAR_Waterfall_ChirpSync_Export.py
 This script plays back previously recorded data from the data export script. It displays an interactive FFT and waterfall plot of the received signal that can be filtered with CFAR.
 
 ```sh
-python CFAR/CFAR_RADAR_Waterfall_ChirpSync_Export.py
+python CFAR/CFAR_RADAR_Waterfall_ChirpSync_Playback.py
 ```
 
 ### Target Detection dbfs
