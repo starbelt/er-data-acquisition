@@ -1,3 +1,4 @@
 # Keep Data Exports folder in the repository, but not the files inside
 DataExports/*
 !DataExports/.gitignore
+CFAR/__pycache__/
