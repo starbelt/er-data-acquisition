@@ -3,11 +3,14 @@
 # Usage: python3 CFAR_RADAR_Waterfall_ChirpSync_Playback.py <cfar_data_file path/name>
 #  
 # Description:
-#     Reads the exported data from CSV files and plays it back in the same GUI as the original script.
-#     Displays an interactive FFT and waterfall plot of the recorded signal using PyQt5 and pyqtgraph.
+#     This script reads in a CSV file containing CFAR data and displays the data in a waterfall plot.
+#     The script also allows the user to toggle between displaying the CFAR threshold and applying the CFAR threshold.
+#     The user can also adjust the CFAR bias, number of guard cells, and number of reference cells.
+#     The user can also adjust the intensity levels of the waterfall plot.
+#     The script also displays the time since the start of the data playback.
 #
 # Written by Nathan Griffin
-# Derived from CW_RADAR_Waterfall.py by Jon Kraft
+# Derived from CFAR_RADAR_Waterfall_ChirpSync.py by Jon Kraft
 # Other contributors: Github Copilot
 #
 # See the LICENSE file for the license.

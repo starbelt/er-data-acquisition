@@ -1,41 +1,22 @@
-#!/usr/bin/env python3
-#  Must use Python 3
-# Copyright (C) 2024 Analog Devices, Inc. 
+# CFAR_RADAR_Waterfall_ChirpSync.py
 #
-# All rights reserved.
+# Usage: python3 CFAR_RADAR_Waterfall_ChirpSync.py
+#  
+# Description:
+#     This script demonstrates how to use the ADI CN0566 Radar Phased Array
+#     to perform a CFAR detection on a received signal.  The script uses the
+#     Pluto SDR to transmit a chirp signal and the phased array to receive
+#     the signal.  The received signal is processed using a CFAR algorithm
+#     to detect targets.  The script displays the received signal in the
+#     frequency domain and the waterfall plot shows the received signal over
+#     time.  The script also allows the user to adjust the CFAR parameters
+#     and the chirp bandwidth.
 #
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
-#     - Redistributions of source code must retain the above copyright
-#       notice, this list of conditions and the following disclaimer.
-#     - Redistributions in binary form must reproduce the above copyright
-#       notice, this list of conditions and the following disclaimer in
-#       the documentation and/or other materials provided with the
-#       distribution.
-#     - Neither the name of Analog Devices, Inc. nor the names of its
-#       contributors may be used to endorse or promote products derived
-#       from this software without specific prior written permission.
-#     - The use of this software may or may not infringe the patent rights
-#       of one or more patent holders.  This license does not release you
-#       from the requirement that you obtain separate licenses from these
-#       patent holders to use this software.
-#     - Use of the software either in source or binary form, must be run
-#       on or directly connected to an Analog Devices Inc. component.
+# Written by Nathan Griffin
+# Derived from CFAR_RADAR_Waterfall_ChirpSync.py by Jon Kraft
+# Other contributors: Github Copilot
 #
-# THIS SOFTWARE IS PROVIDED BY ANALOG DEVICES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-# INCLUDING, BUT NOT LIMITED TO, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A
-# PARTICULAR PURPOSE ARE DISCLAIMED.
-#
-# IN NO EVENT SHALL ANALOG DEVICES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, INTELLECTUAL PROPERTY
-# RIGHTS, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-# THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-'''CFAR Radar Demo with Phaser (CN0566)
-       and implementing one chirp synchronized FFT data collection
-   Jon Kraft, March 2 2024'''
+# See the LICENSE file for the license.
 # %%
 # Imports
 import sys
@@ -46,13 +27,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from pyqtgraph.Qt import QtCore, QtGui
 from target_detection_dbfs import cfar
-
-'''This script uses the new Pluto TDD engine
-   As of March 2024, this is in the main branch of https://github.com/analogdevicesinc/pyadi-iio
-   Also, make sure your Pluto firmware is updated to rev 0.39 (or later)
-'''
 import adi
-print(adi.__version__)
 
 '''Key Parameters'''
 sample_rate = 2e6

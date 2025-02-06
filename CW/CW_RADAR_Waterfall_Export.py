@@ -1,6 +1,6 @@
-# CW_RADAR_Waterfall_DataExport.py
+# CW_RADAR_Waterfall_Export.py
 #
-# Usage: python3 CW_RADAR_Waterfall_DataExport.py
+# Usage: python3 CW_RADAR_Waterfall_Export.py
 #  
 # Description:
 #     Initializes the SDR and Phaser devices.
@@ -9,9 +9,12 @@
 #     Configures the SDR for both Rx and Tx operations.
 #     Creates a sinewave waveform for transmission.
 #     Continuously updates the FFT and waterfall plots with the received data.
+#     Exports the FFT data to a CSV file upon program termination.
+#
 # Output:
 #     This script initializes and configures a Software Defined Radio (SDR) and a Phaser device to perform Continuous Wave (CW) radar signal acquisition. 
 #     It displays an interactive FFT and waterfall plot of the received signal using PyQt5 and pyqtgraph.
+#     The script exports the FFT data to a CSV file upon program termination.
 #
 # Written by Nathan Griffin
 # Derived from CW_RADAR_Waterfall.py by Jon Kraft
