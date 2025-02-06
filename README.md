@@ -37,9 +37,6 @@ This repository contains scripts for Continuous Wave (CW) and Frequency Modulate
    cd er-data-acquisition
    ```
 2. Install the required Python packages:
-   ```sh
-   pip install -r requirements.txt
-   ```
 
 ## Usage
 
