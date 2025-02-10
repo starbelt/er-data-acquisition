@@ -552,7 +552,7 @@ def export_data_to_csv():
         None
     """
     st = str(start_time).replace(":", ".") # Remove ":" for file uploadability
-    filename = "cfar_data_" + st + "_fft_size_" + str(fft_size) + "_sample_rate_"+ str(sample_rate / 1e6)+"MHz" +".csv"  # Create filename
+    filename = "cfar_data_" + st + "_fft_size_" + str(int(fft_size)) + "_sample_rate_" + "{:.2f}".format(sample_rate / 1e6) + ".csv"  # Create filename
     file_exists = os.path.isfile(filename)  # Check if file exists
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
