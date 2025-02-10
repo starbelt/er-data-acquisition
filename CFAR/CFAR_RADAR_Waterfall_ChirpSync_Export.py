@@ -37,7 +37,6 @@ output_freq = 10e9
 default_chirp_bw = 500e6
 ramp_time = 500      # ramp time in us
 num_slices = 400     # this sets how much time will be displayed on the waterfall plot
-fft_size = 1024 * 2  # size of the fft
 plot_freq = 100e3    # x-axis freq range to plot
 
 start_time = datetime.datetime.now()  # Get start time
@@ -552,7 +551,8 @@ def export_data_to_csv():
     Returns:
         None
     """
-    filename = "cfar_data_" + str(start_time) + "_fft_size_"+ str(fft_size) +".csv"  # Create filename
+    st = str(start_time).replace(":", ".") # Remove ":" for file uploadability
+    filename = "cfar_data_" + st + "_fft_size_" + str(fft_size) + ".csv"  # Create filename
     file_exists = os.path.isfile(filename)  # Check if file exists
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
