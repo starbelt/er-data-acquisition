@@ -37,7 +37,8 @@ output_freq = 10e9
 default_chirp_bw = 500e6
 ramp_time = 500      # ramp time in us
 num_slices = 400     # this sets how much time will be displayed on the waterfall plot
-fft_size = 1024 * 4
+fft_size = 1024
+# fft_size = 8192  
 plot_freq = 100e3    # x-axis freq range to plot
 
 last_error_time = None
@@ -64,6 +65,9 @@ q = np.sin(2 * np.pi * t * fc) * 2 ** 14
 iq = 1 * (i + 1j * q)
 
 ramp_time_s = ramp_time / 1e6
+slope = BW / ramp_time_s
+dist = (freq - signal_freq) * c / (2 * slope)
+plot_dist = False
 
 plot_threshold = False
 cfar_toggle = False
@@ -112,6 +116,14 @@ class Window(QMainWindow):
         self.quit_button = QPushButton("Quit")
         self.quit_button.pressed.connect(self.end_program)
         layout.addWidget(self.quit_button, 30, 0, 4, 4)
+        
+        self.x_axis_check = QCheckBox("Convert to Distance")
+        font = self.x_axis_check.font()
+        font.setPointSize(10)
+        self.x_axis_check.setFont(font)
+
+        self.x_axis_check.stateChanged.connect(self.change_x_axis)
+        layout.addWidget(self.x_axis_check, 4, 0)
         
         #CFAR Sliders
         self.cfar_bias = QSlider(Qt.Horizontal)
@@ -308,6 +320,19 @@ class Window(QMainWindow):
             cfar_toggle = True
         else:
             cfar_toggle = False
+    
+    def change_x_axis(self, state):
+        """ Toggles between showing frequency and range for the x-axis
+		"""
+        global plot_dist, slope, signal_freq, plot_freq
+        plot_state = win.fft_plot.getViewBox().state
+        if state == QtCore.Qt.Checked:
+            plot_dist = True
+            range_x = (plot_freq) * c / (2 * slope)
+            self.fft_plot.setXRange(0, range_x)
+        else:
+            plot_dist = False
+            self.fft_plot.setXRange(signal_freq, signal_freq+plot_freq)
 
 def read_csv_data(filename):
     if not os.path.exists(filename):
@@ -321,7 +346,7 @@ def read_csv_data(filename):
     return data
 
 def update():
-    global index, plot_threshold, freq, ramp_time_s, sample_rate, cfar_data, last_error_time, previous_time_since_start, freq_overwrite
+    global index, plot_threshold, freq, ramp_time_s, sample_rate, cfar_data, last_error_time, previous_time_since_start, freq_overwrite, plot_dist
     label_style = {"color": "#FFF", "font-size": "14pt"}
 
     if index >= len(cfar_data):
@@ -371,11 +396,23 @@ def update():
     win.img_array = np.roll(win.img_array, 1, axis=0)
     
     if cfar_toggle:
-        win.fft_curve.setData(freq, s_dbfs_cfar)
-        win.img_array[0] = s_dbfs_cfar
+        if plot_dist: 
+            win.fft_curve.setData(dist, s_dbfs_cfar)
+            win.img_array[0] = s_dbfs_cfar
+            win.fft_plot.setLabel("bottom", text="Distance", units="m", **label_style)
+        else:
+            win.fft_curve.setData(freq, s_dbfs_cfar)
+            win.img_array[0] = s_dbfs_cfar
+            win.fft_plot.setLabel("bottom", text="Frequency", units="Hz", **label_style)
     else:
-        win.fft_curve.setData(freq, s_dbfs)
-        win.img_array[0] = s_dbfs
+        if plot_dist: 
+            win.fft_curve.setData(dist, s_dbfs)
+            win.img_array[0] = s_dbfs
+            win.fft_plot.setLabel("bottom", text="Distance", units="m", **label_style)
+        else:
+            win.fft_curve.setData(freq, s_dbfs)
+            win.img_array[0] = s_dbfs
+            win.fft_plot.setLabel("bottom", text="Frequency", units="Hz", **label_style)
     
     win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])
     win.imageitem.setImage(win.img_array, autoLevels=False)
