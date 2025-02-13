@@ -58,7 +58,7 @@ sample_rate = 4e6
 center_freq = 2.1e9
 signal_freq = 100e3
 rx_gain = 60   # must be between -3 and 70
-tx_gain = 0   # must be between 0 and -88
+tx_gain = -0   # must be between 0 and -88
 output_freq = 9.9e9
 chirp_BW = 500e6
 ramp_time = 300  # us
@@ -112,7 +112,7 @@ my_sdr.rx_hardwaregain_chan1 = int(rx_gain)   # must be between -3 and 70
 my_sdr.tx_lo = int(center_freq)
 my_sdr.tx_enabled_channels = [0, 1]
 my_sdr.tx_cyclic_buffer = True      # must set cyclic buffer to true for the tdd burst mode
-my_sdr.tx_hardwaregain_chan0 = int(tx_gain)   # must be between 0 and -88
+my_sdr.tx_hardwaregain_chan0 = -88   # must be between 0 and -88
 my_sdr.tx_hardwaregain_chan1 = int(tx_gain)   # must be between 0 and -88
 
 # Configure the ADF4159 Ramping PLL
