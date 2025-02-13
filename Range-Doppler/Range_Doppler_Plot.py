@@ -67,7 +67,7 @@ max_range = 100
 min_scale = 0
 max_scale = 100
 plot_data = True
-mti_filter = True
+mti_filter = False
 save_data = False   # saves data for later processing (use "Range_Doppler_Processing.py")
 f = "saved_radar_data.npy"
 
@@ -90,7 +90,7 @@ for i in range(0, 8):
     my_phaser.set_chan_phase(i, 0)
 
 gain_list = [127] * 8
-#gain_list = [8, 34, 84, 127, 127, 84, 34, 8]  # Blackman taper
+gain_list = [8, 34, 84, 127, 127, 84, 34, 8]  # Blackman taper
 for i in range(0, len(gain_list)):
     my_phaser.set_chan_gain(i, gain_list[i], apply_cal=True)
 
@@ -112,7 +112,7 @@ my_sdr.rx_hardwaregain_chan1 = int(rx_gain)   # must be between -3 and 70
 my_sdr.tx_lo = int(center_freq)
 my_sdr.tx_enabled_channels = [0, 1]
 my_sdr.tx_cyclic_buffer = True      # must set cyclic buffer to true for the tdd burst mode
-my_sdr.tx_hardwaregain_chan0 = -88   # must be between 0 and -88
+my_sdr.tx_hardwaregain_chan0 = int(tx_gain)   # must be between 0 and -88
 my_sdr.tx_hardwaregain_chan1 = int(tx_gain)   # must be between 0 and -88
 
 # Configure the ADF4159 Ramping PLL
