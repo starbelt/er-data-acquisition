@@ -54,7 +54,7 @@ import adi
 print(adi.__version__)
 
 '''Key Parameters'''
-sample_rate = 4e6 
+sample_rate = 1e6 
 center_freq = 2.1e9
 signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
