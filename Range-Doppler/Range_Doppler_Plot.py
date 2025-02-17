@@ -57,19 +57,21 @@ print(adi.__version__)
 sample_rate = 4e6 
 center_freq = 2.1e9
 signal_freq = 100e3
-rx_gain = 60   # must be between -3 and 70
+rx_gain = 20   # must be between -3 and 70
 tx_gain = -0   # must be between 0 and -88
-output_freq = 9.9e9
+output_freq = 10e9
 chirp_BW = 500e6
-ramp_time = 300  # us
-num_chirps = 256
-max_range = 100
+ramp_time = 500  # us
+# num_chirps = 256
+num_chirps = 1 #changed for testing purposes
+max_range = 15
 min_scale = 0
-max_scale = 100
+max_scale = 10
 plot_data = True
 mti_filter = False
 save_data = False   # saves data for later processing (use "Range_Doppler_Processing.py")
 f = "saved_radar_data.npy"
+v_scale = 5 # ±scale of velocity in plot, m/s
 
 # %%
 """ Program the basic hardware settings
@@ -83,14 +85,14 @@ my_phaser = adi.CN0566(uri=rpi_ip, sdr=my_sdr)
 
 # Initialize both ADAR1000s, set gains to max, and all phases to 0
 my_phaser.configure(device_mode="rx")
-my_phaser.element_spacing = 0.014
+my_phaser.element_spacing = 0.015
 my_phaser.load_gain_cal()
 my_phaser.load_phase_cal()
 for i in range(0, 8):
     my_phaser.set_chan_phase(i, 0)
 
 gain_list = [127] * 8
-gain_list = [8, 34, 84, 127, 127, 84, 34, 8]  # Blackman taper
+# gain_list = [8, 34, 84, 127, 127, 84, 34, 8]  # Blackman taper
 for i in range(0, len(gain_list)):
     my_phaser.set_chan_gain(i, gain_list[i], apply_cal=True)
 
@@ -101,6 +103,7 @@ my_phaser._gpios.gpio_vctrl_2 = 1 # 1=Send LO to transmit circuitry  (0=disable 
 
 # Configure SDR Rx
 my_sdr.sample_rate = int(sample_rate)
+sample_rate = int(my_sdr.sample_rate)
 my_sdr.rx_lo = int(center_freq)
 my_sdr.rx_enabled_channels = [0, 1]   # enable Rx1 and Rx2
 my_sdr.gain_control_mode_chan0 = 'manual'  # manual or slow_attack
@@ -145,7 +148,8 @@ sdr_pins.gpio_phaser_enable = True
 tdd.enable = False         # disable TDD to configure the registers
 tdd.sync_external = True
 tdd.startup_delay_ms = 0
-PRI_ms = ramp_time/1e3 + 0.2
+# PRI_ms = ramp_time/1e3 + 0.2
+PRI_ms = ramp_time/1e3 + 1.0 # changed for testing purposes
 tdd.frame_length_ms = PRI_ms    # each chirp is spaced this far apart
 #tdd.frame_length_raw = PRI_ms/1000 * 2 * sample_rate
 tdd.burst_count = num_chirps       # number of chirps in one continuous receive buffer
@@ -236,7 +240,8 @@ ts = 1 / float(sample_rate)
 t = np.arange(0, N * ts, ts)
 i = np.cos(2 * np.pi * t * fc) * 2 ** 14
 q = np.sin(2 * np.pi * t * fc) * 2 ** 14
-iq = 0.9* (i + 1j * q)
+# iq = 0.9* (i + 1j * q)
+iq = 1.0 * (i + 1j * q) #changed for testing purposes
 
 # transmit data from Pluto
 my_sdr.tx([iq, iq])
@@ -299,7 +304,7 @@ if plot_data == True:
     ax.set_xlabel('Velocity [m/s]', fontsize=22)
     ax.set_ylabel('Range [m]', fontsize=22)
     
-    ax.set_xlim([-10, 10])
+    ax.set_xlim([-v_scale, v_scale])
     ax.set_ylim([0, max_range])
     ax.set_yticks(np.arange(0, max_range, max_range/20))
     plt.xticks(fontsize=20)
