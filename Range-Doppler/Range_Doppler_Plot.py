@@ -151,7 +151,7 @@ tdd.startup_delay_ms = 0
 # PRI_ms = ramp_time/1e3 + 0.2
 PRI_ms = ramp_time/1e3 + 0.2 # changed for testing purposes
 tdd.frame_length_ms = PRI_ms    # each chirp is spaced this far apart
-#tdd.frame_length_raw = PRI_ms/1000 * 2 * sample_rate
+tdd.frame_length_raw = PRI_ms/1000 * 2 * sample_rate
 tdd.burst_count = num_chirps       # number of chirps in one continuous receive buffer
 
 tdd.channel[0].enable = True
@@ -241,7 +241,7 @@ t = np.arange(0, N * ts, ts)
 i = np.cos(2 * np.pi * t * fc) * 2 ** 14
 q = np.sin(2 * np.pi * t * fc) * 2 ** 14
 # iq = 0.9* (i + 1j * q)
-iq = 1.0 * (i + 1j * q) #changed for testing purposes
+iq = 0.9 * (i + 1j * q) #changed for testing purposes
 
 # transmit data from Pluto
 my_sdr.tx([iq, iq])
