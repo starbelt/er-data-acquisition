@@ -64,9 +64,9 @@ chirp_BW = 500e6
 ramp_time = 500  # us
 num_chirps = 256
 # num_chirps = 1 #changed for testing purposes
-max_range = 15
+max_range = 30
 min_scale = 0
-max_scale = 10
+max_scale = 30
 plot_data = True
 mti_filter = False
 save_data = False   # saves data for later processing (use "Range_Doppler_Processing.py")
@@ -97,7 +97,7 @@ for i in range(0, len(gain_list)):
     my_phaser.set_chan_gain(i, gain_list[i], apply_cal=True)
 
 # Setup Raspberry Pi GPIO states
-my_phaser._gpios.gpio_tx_sw = 0  # 0 = TX_OUT_2, 1 = TX_OUT_1
+my_phaser._gpios.gpio_tx_sw = 1  # 0 = TX_OUT_2, 1 = TX_OUT_1
 my_phaser._gpios.gpio_vctrl_1 = 1 # 1=Use onboard PLL/LO source  (0=disable PLL and VCO, and set switch to use external LO input)
 my_phaser._gpios.gpio_vctrl_2 = 1 # 1=Send LO to transmit circuitry  (0=disable Tx path, and send LO to LO_OUT)
 
@@ -105,7 +105,7 @@ my_phaser._gpios.gpio_vctrl_2 = 1 # 1=Send LO to transmit circuitry  (0=disable 
 my_sdr.sample_rate = int(sample_rate)
 sample_rate = int(my_sdr.sample_rate)
 my_sdr.rx_lo = int(center_freq)
-my_sdr.rx_enabled_channels = [0, 1]   # enable Rx1 and Rx2
+my_sdr.rx_enabled_channels = [1, 1]   # enable Rx1 and Rx2
 my_sdr.gain_control_mode_chan0 = 'manual'  # manual or slow_attack
 my_sdr.gain_control_mode_chan1 = 'manual'  # manual or slow_attack
 my_sdr.rx_hardwaregain_chan0 = int(rx_gain)   # must be between -3 and 70
@@ -113,9 +113,9 @@ my_sdr.rx_hardwaregain_chan1 = int(rx_gain)   # must be between -3 and 70
 
 # Configure SDR Tx
 my_sdr.tx_lo = int(center_freq)
-my_sdr.tx_enabled_channels = [0, 1]
+my_sdr.tx_enabled_channels = [1, 1]
 my_sdr.tx_cyclic_buffer = True      # must set cyclic buffer to true for the tdd burst mode
-my_sdr.tx_hardwaregain_chan0 = -88   # must be between 0 and -88
+my_sdr.tx_hardwaregain_chan0 = int(tx_gain)   # must be between 0 and -88
 my_sdr.tx_hardwaregain_chan1 = int(tx_gain)   # must be between 0 and -88
 
 # Configure the ADF4159 Ramping PLL
