@@ -30,7 +30,7 @@ from target_detection_dbfs import cfar
 import adi
 
 '''Key Parameters'''
-sample_rate = .6e6
+sample_rate = 0.6e6
 center_freq = 2.1e9
 signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
