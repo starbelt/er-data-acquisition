@@ -30,9 +30,9 @@ import adi
 from collections import defaultdict
 
 '''Key Parameters'''
-sample_rate = 1.35e6
+sample_rate = 0.682e6
 center_freq = 2.1e9
-signal_freq = 140e3
+signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
 default_chirp_bw = 750e6
@@ -184,8 +184,7 @@ slope = BW / ramp_time_s
 upper_freq = (max_dist * 2 * slope / c) + signal_freq
 lower_freq = (min_dist * 2 * slope / c) + signal_freq
 # freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
-freq = np.linspace(lower_freq, upper_freq , int(fft_size))
-
+freq = np.linspace(lower_freq, upper_freq , 224)
 dist = (freq - signal_freq) * c / (2 * slope)
 plot_dist = False
 
@@ -417,7 +416,7 @@ class Window(QMainWindow):
         self.fft_plot.setTitle("Received Signal - Frequency Spectrum", **title_style)
         layout.addWidget(self.fft_plot, 0, 2, self.num_rows, 1)
         self.fft_plot.setYRange(-60, 0)
-        self.fft_plot.setXRange(signal_freq, signal_freq+plot_freq)
+        self.fft_plot.setXRange(lower_freq, upper_freq)
 
         # Waterfall plot
         self.waterfall = pg.PlotWidget()
