@@ -572,8 +572,9 @@ def export_data_to_csv():
         writer = csv.writer(file)
         if not file_exists:
             writer.writerow([ "Time Since Start (s)", "Frequency (Hz)", "Magnitude (dBFS)"])
-        for row in filtered_data:
-            writer.writerow(row)
+        for time_since_start in sorted(filtered_data.keys()):
+            for row in filtered_data[time_since_start]:
+                writer.writerow(row)
 
 def update():
     """ Updates the FFT in the window
