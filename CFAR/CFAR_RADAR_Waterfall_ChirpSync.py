@@ -38,7 +38,7 @@ output_freq = 10e9
 default_chirp_bw = 250e6
 ramp_time = 500      # ramp time in us
 num_slices = 100     # this sets how much time will be displayed on the waterfall plot
-fft_size = 1024 * 8
+fft_size = 1024
 plot_freq = 100e3    # x-axis freq range to plot
 
 # %%
