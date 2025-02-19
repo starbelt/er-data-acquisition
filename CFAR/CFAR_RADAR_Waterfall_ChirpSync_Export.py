@@ -37,7 +37,7 @@ output_freq = 10e9
 default_chirp_bw = 750e6
 ramp_time = 500      # ramp time in us
 num_slices = 400     
-plot_freq = 140e3    # x-axis freq range to plot
+plot_freq = 200e3    # x-axis freq range to plot
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
