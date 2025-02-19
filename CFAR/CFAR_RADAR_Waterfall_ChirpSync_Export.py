@@ -27,6 +27,7 @@ import csv
 import datetime
 import os
 import adi
+from collections import defaultdict
 
 '''Key Parameters'''
 sample_rate = 0.8e6
@@ -38,9 +39,16 @@ default_chirp_bw = 750e6
 ramp_time = 500      # ramp time in us
 num_slices = 400     
 plot_freq = 200e3    # x-axis freq range to plot
+max_dist = 6
+min_dist = -1
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
+
+upper_freq = (max_dist * 2 * slope / c) + signal_freq
+lower_freq = (min_dist * 2 * slope / c) + signal_freq
+
+filtered_data = defaultdict(list)
 
 """ Program the basic hardware settings
 """
@@ -549,14 +557,20 @@ def export_data_to_csv():
     Returns:
         None
     """
-    st = str(start_time).replace(":", ".") # Remove ":" for file uploadability
-    filename = "cfar_data_" + st + "_fft_size_" + str(int(fft_size)) + "_sample_rate_" + "{:.2f}".format(sample_rate / 1e6) + "MHz.csv"  # Create filename
+    st = str(start_time).replace(":", ".").replace(" ", "_") # Remove ":" and replace spaces with "_"
+    filename = "filtered_cfar_data_" + st + "_fft_size_" + str(int(fft_size)) + "_sample_rate_" + "{:.2f}".format(sample_rate / 1e6) + "MHz.csv"  # Create filename
     file_exists = os.path.isfile(filename)  # Check if file exists
+    
+    for row in data_list:
+        t_since_start = float(row[0])
+        frequency = float(row[1])
+        if lower_freq < frequency < upper_freq:
+            filtered_data[t_since_start].append(row)
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
         if not file_exists:
             writer.writerow([ "Time Since Start (s)", "Frequency (Hz)", "Magnitude (dBFS)"])
-        for row in data_list:
+        for row in filtered_data:
             writer.writerow(row)
 
 def update():
