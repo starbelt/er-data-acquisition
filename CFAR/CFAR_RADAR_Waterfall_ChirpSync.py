@@ -37,7 +37,7 @@ rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
 default_chirp_bw = 500e6
 ramp_time = 500      # ramp time in us
-num_slices = 100     # this sets how much time will be displayed on the waterfall plot
+num_slices = 400     # this sets how much time will be displayed on the waterfall plot
 fft_size = 1024
 plot_freq = 100e3    # x-axis freq range to plot
 
