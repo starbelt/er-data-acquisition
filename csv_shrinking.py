@@ -53,8 +53,8 @@ if __name__ == "__main__":
         reader = csv.reader(file)
         header = next(reader)
         for row in reader:
-            t_since_start = float(row[1])
-            frequency = float(row[2])
+            t_since_start = float(row[0])
+            frequency = float(row[1])
             if lower_freq < frequency < upper_freq:
                 filtered_data[t_since_start].append(row)
 
