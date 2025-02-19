@@ -30,7 +30,7 @@ import adi
 from collections import defaultdict
 
 '''Key Parameters'''
-sample_rate = 0.8e6
+sample_rate = 0.6e6
 center_freq = 2.1e9
 signal_freq = 140e3
 rx_gain = 20   # must be between -3 and 70
