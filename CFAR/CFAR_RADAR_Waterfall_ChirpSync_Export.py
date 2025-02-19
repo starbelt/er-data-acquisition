@@ -44,9 +44,8 @@ min_dist = -1
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
+c = 3e8
 
-upper_freq = (max_dist * 2 * slope / c) + signal_freq
-lower_freq = (min_dist * 2 * slope / c) + signal_freq
 
 filtered_data = defaultdict(list)
 
@@ -185,6 +184,9 @@ freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
 slope = BW / ramp_time_s
 dist = (freq - signal_freq) * c / (2 * slope)
 plot_dist = False
+
+upper_freq = (max_dist * 2 * slope / c) + signal_freq
+lower_freq = (min_dist * 2 * slope / c) + signal_freq
 
 print(
     """
