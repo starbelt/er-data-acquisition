@@ -5,8 +5,8 @@ import re
 from collections import defaultdict
 
 # Global variables
-signal_freq = 100e3
-default_chirp_bw = 500e6
+signal_freq = 140e3
+default_chirp_bw = 750e6
 ramp_time = 500      # ramp time in us
 c = 3e8
 ramp_time_s = ramp_time / 1e6

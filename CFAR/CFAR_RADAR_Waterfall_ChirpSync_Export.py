@@ -29,15 +29,15 @@ import os
 import adi
 
 '''Key Parameters'''
-sample_rate = 0.6e6
+sample_rate = 0.8e6
 center_freq = 2.1e9
-signal_freq = 100e3
+signal_freq = 140e3
 rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
-default_chirp_bw = 500e6
+default_chirp_bw = 750e6
 ramp_time = 500      # ramp time in us
 num_slices = 400     
-plot_freq = 100e3    # x-axis freq range to plot
+plot_freq = 140e3    # x-axis freq range to plot
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
