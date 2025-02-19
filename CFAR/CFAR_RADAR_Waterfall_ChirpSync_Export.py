@@ -180,13 +180,16 @@ print("buffer_time:", buffer_time, " ms")
 """
 c = 3e8
 wavelength = c / output_freq
-freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
 slope = BW / ramp_time_s
+upper_freq = (max_dist * 2 * slope / c) + signal_freq
+lower_freq = (min_dist * 2 * slope / c) + signal_freq
+# freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
+freq = np.linspace(lower_freq, upper_freq , int(fft_size))
+
 dist = (freq - signal_freq) * c / (2 * slope)
 plot_dist = False
 
-upper_freq = (max_dist * 2 * slope / c) + signal_freq
-lower_freq = (min_dist * 2 * slope / c) + signal_freq
+
 
 print(
     """
