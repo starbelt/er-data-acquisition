@@ -30,7 +30,7 @@ import adi
 from collections import defaultdict
 
 '''Key Parameters'''
-sample_rate = 0.6e6
+sample_rate = 0.682e6
 center_freq = 2.1e9
 signal_freq = 140e3
 rx_gain = 20   # must be between -3 and 70
@@ -559,8 +559,11 @@ def export_data_to_csv():
     Returns:
         None
     """
+    first_t_start = sorted(filtered_data.keys())[0]
+    num_per_sample = len(filtered_data[first_t_start])
+    num_samples = len(filtered_data.keys())
     st = str(start_time).replace(":", ".").replace(" ", "_") # Remove ":" and replace spaces with "_"
-    filename = "filtered_cfar_data_" + st + "_fft_size_" + str(int(fft_size)) + "_sample_rate_" + "{:.2f}".format(sample_rate / 1e6) + "MHz.csv"  # Create filename
+    filename = "filtered_cfar_data_" + st + "_fft_size_" + str(int(fft_size)) + "_sample_rate_" + "{:.2f}".format(sample_rate / 1e6) + "MHz_Sample_Size_" + str(num_per_sample) + "_" + str(num_samples)+".csv"  # Create filename
     file_exists = os.path.isfile(filename)  # Check if file exists
     
     for row in data_list:
