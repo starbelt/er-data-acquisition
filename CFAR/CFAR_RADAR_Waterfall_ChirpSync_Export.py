@@ -531,20 +531,18 @@ App = QApplication(sys.argv)
 win = Window()
 index = 0
 
-def store_data(freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold):
+def store_data(freq, s_dbfs):
     """ Stores the frequency and FFT magnitude data in a list
     Args:
         freq (np.array): The frequency data
         s_dbfs (np.array): The FFT magnitude data in dBFS
-        s_dbfs_cfar (np.array): The CFAR thresholded FFT magnitude data in dBFS
-        s_dbfs_threshold (np.array): The CFAR threshold data in dBFS
     Returns:
         None
     """
     current_time = datetime.datetime.now()  # Get current time
     time_since_start = (current_time - start_time).total_seconds()  # Calculate time since start in seconds
-    for f, mag, cfar_mag, threshold in zip(freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold):
-        data_list.append([current_time, time_since_start, f, mag, cfar_mag, threshold])
+    for f, mag in zip(freq, s_dbfs):
+        data_list.append([time_since_start, f, mag])
 
 def export_data_to_csv():
     """ Exports the stored data to a CSV file
@@ -557,7 +555,7 @@ def export_data_to_csv():
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
         if not file_exists:
-            writer.writerow(["Timestamp", "Time Since Start (s)", "Frequency (Hz)", "Magnitude (dBFS)", "CFAR Magnitude (dBFS)", "CFAR Threshold (dBFS)"])
+            writer.writerow([ "Time Since Start (s)", "Frequency (Hz)", "Magnitude (dBFS)"])
         for row in data_list:
             writer.writerow(row)
 
@@ -616,7 +614,7 @@ def update():
     win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])
     win.imageitem.setImage(win.img_array, autoLevels=False)
     # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
-    store_data(freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold)
+    store_data(freq, s_dbfs)
     
     if index == 1:
         win.fft_plot.enableAutoRange("xy", False)
