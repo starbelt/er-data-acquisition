@@ -31,14 +31,14 @@ from collections import defaultdict
 import cv2
 
 '''Key Parameters'''
-sample_rate = 0.522e6
+sample_rate = 0.682e6
 center_freq = 2.1e9
 signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
 default_chirp_bw = 750e6
-ramp_time = 950      # ramp time in us
-num_slices = 400     
+ramp_time = 500      # ramp time in us
+num_slices = 112     
 plot_freq = 200e3    # x-axis freq range to plot
 max_dist = 6
 min_dist = 3
