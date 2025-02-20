@@ -691,7 +691,7 @@ def update():
         # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
         store_data(freq, s_dbfs)
         
-        if index >= 230:
+        if index > img_size+1:
             # win.quit_button.pressed.emit()
             win.end_program()
             print("enough data has been collected")
