@@ -22,8 +22,8 @@ This repository contains scripts for Continuous Wave (CW) and Frequency Modulate
 
 ## Requirements
 
-- Python
-- [Analog Devices Inc.](https://www.analog.com) components (see [Hardware](#hardware))
+- [Python](https://www.python.org/downloads/)
+- [Analog Devices Inc. components](https://www.analog.com/en/resources/reference-designs/circuits-from-the-lab/cn0566.html)  (see [Hardware](#hardware))
   - Ensure PLUTO-SDR is up to date
 - [PyQt5](https://pypi.org/project/PyQt5/)
 - [pyqtgraph](https://pypi.org/project/pyqtgraph/)
