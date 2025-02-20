@@ -686,7 +686,8 @@ def update():
     store_data(freq, s_dbfs)
     
     if index >= 258:
-        win.quit_button.pressed.emit()
+        # win.quit_button.pressed.emit()
+        print("enough data has been collected")
     if index == 1:
         win.fft_plot.enableAutoRange("xy", False)
     index += 1
