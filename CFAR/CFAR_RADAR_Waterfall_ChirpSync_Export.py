@@ -43,7 +43,7 @@ plot_freq = 200e3    # x-axis freq range to plot
 max_dist = 6
 min_dist = 3
 
-img_size = 112
+img_size = 56
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
