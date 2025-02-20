@@ -619,6 +619,7 @@ def export_data_to_csv():
 
     downsampled_data = np.array(downsampled_data).T
     downsampled_data = np.flipud(downsampled_data)
+    downsampled_data = np.fliplr(downsampled_data)
     
     normalized_data = cv2.normalize(downsampled_data, None, 0, 255, cv2.NORM_MINMAX)
     image_data = normalized_data.astype(np.uint8)
