@@ -47,7 +47,7 @@ start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
 c = 3e8
 
-measure_distance = 5 # m
+measure_distance = "5-6_in" 
 image_path = f"DataSet/{measure_distance}/Images"
 file_path = f"DataSet/{measure_distance}/CSV"
 
@@ -690,6 +690,7 @@ def update():
     
     if index >= 258:
         # win.quit_button.pressed.emit()
+        win.end_program()
         print("enough data has been collected")
     if index == 1:
         win.fft_plot.enableAutoRange("xy", False)
