@@ -32,14 +32,6 @@ This repository contains scripts for Continuous Wave (CW) and Frequency Modulate
 - [OpenCV](https://pypi.org/project/opencv-python/)
 - [pylibiio](https://pypi.org/project/pylibiio/)
 - [pyadi-iio](https://pypi.org/project/pyadi-iio/)
-- [argparse](https://pypi.org/project/argparse/)
-- [csv](https://pypi.org/project/csv/)
-- [re](https://pypi.org/project/re/)
-- [collections](https://pypi.org/project/collections/)
-- [time](https://pypi.org/project/time/)
-- [sys](https://pypi.org/project/sys/)
-- [os](https://pypi.org/project/os/)
-- [datetime](https://pypi.org/project/datetime/)
 
 ## Installation
 
