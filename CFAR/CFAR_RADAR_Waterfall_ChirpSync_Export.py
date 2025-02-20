@@ -615,7 +615,9 @@ def export_data_to_csv():
         raise ValueError("Number of samples is less than 225")
     
     for t in sorted(image_data.keys())[1:225]:  # Skip the first time sample
-        downsampled_data.append(downsample(image_data[t], 224))
+        # downsampled_data.append(downsample(image_data[t], 224))
+        downsampled_data.append(downsample(image_data[t][:len(image_data[t])//2], 224))
+        
 
     downsampled_data = np.array(downsampled_data).T
     downsampled_data = np.flipud(downsampled_data)
