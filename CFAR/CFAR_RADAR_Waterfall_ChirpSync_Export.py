@@ -31,13 +31,13 @@ from collections import defaultdict
 import cv2
 
 '''Key Parameters'''
-sample_rate = 0.682e6
+sample_rate = 0.5e6
 center_freq = 2.1e9
 signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
 default_chirp_bw = 750e6
-ramp_time = 300      # ramp time in us
+ramp_time = 1000      # ramp time in us
 num_slices = 400     
 plot_freq = 200e3    # x-axis freq range to plot
 max_dist = 6
@@ -689,7 +689,7 @@ def update():
         # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
         store_data(freq, s_dbfs)
         
-        if index >= 258:
+        if index >= 230:
             # win.quit_button.pressed.emit()
             win.end_program()
             print("enough data has been collected")
