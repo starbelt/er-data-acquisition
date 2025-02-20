@@ -49,7 +49,7 @@ start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
 c = 3e8
 
-measure_distance = "12-31_in" 
+measure_distance = "38-57_in" 
 image_path = f"DataSet/{measure_distance}/Images"
 file_path = f"DataSet/{measure_distance}/CSV"
 end_state = True
