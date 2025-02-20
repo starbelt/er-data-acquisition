@@ -617,7 +617,7 @@ def export_data_to_csv():
     
     for t in sorted(image_data.keys())[1:225]:  # Skip the first time sample
         # downsampled_data.append(downsample(image_data[t], 224))
-        downsampled_data.append(downsample(image_data[t][len(image_data[t])//2:], 224))
+        downsampled_data.append(downsample(image_data[t][len(image_data[t])//2.5:], 224))
         
 
     downsampled_data = np.array(downsampled_data).T
