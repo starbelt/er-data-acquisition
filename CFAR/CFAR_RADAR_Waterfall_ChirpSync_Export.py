@@ -41,7 +41,7 @@ ramp_time = 500      # ramp time in us
 num_slices = 400     
 plot_freq = 200e3    # x-axis freq range to plot
 max_dist = 6
-min_dist = -1
+min_dist = 3
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
