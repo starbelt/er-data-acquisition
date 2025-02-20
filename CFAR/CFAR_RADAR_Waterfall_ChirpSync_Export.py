@@ -43,6 +43,8 @@ plot_freq = 200e3    # x-axis freq range to plot
 max_dist = 6
 min_dist = 3
 
+img_size = 112
+
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
 c = 3e8
@@ -609,15 +611,15 @@ def export_data_to_csv():
         for row in filtered_data[time_since_start]:
             t_since_start = float(row[0])
             magnitude = float(row[2])
-            shifted_magnitude = (magnitude - magnitude_min) / (magnitude_max - magnitude_min) * 225
+            shifted_magnitude = (magnitude - magnitude_min) / (magnitude_max - magnitude_min) * (img_size+1)
             image_data[t_since_start].append(shifted_magnitude)
     
-    if num_samples < 225:
+    if num_samples < (img_size+1):
         raise ValueError("Number of samples is less than 225")
     
-    for t in sorted(image_data.keys())[1:225]:  # Skip the first time sample
+    for t in sorted(image_data.keys())[1:(img_size+1)]:  # Skip the first time sample
         # downsampled_data.append(downsample(image_data[t], 224))
-        downsampled_data.append(downsample(image_data[t][len(image_data[t]) * 3 // 5:], 224))
+        downsampled_data.append(downsample(image_data[t][len(image_data[t]) * 3 // 5:], img_size))
         
 
     downsampled_data = np.array(downsampled_data).T
