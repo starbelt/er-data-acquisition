@@ -50,6 +50,7 @@ c = 3e8
 measure_distance = "5-6_in" 
 image_path = f"DataSet/{measure_distance}/Images"
 file_path = f"DataSet/{measure_distance}/CSV"
+end_state = True
 
 magnitude_min = -100
 magnitude_max = 0
@@ -634,7 +635,7 @@ def export_data_to_csv():
 def update():
     """ Updates the FFT in the window
 	"""
-    global index, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate
+    global index, end_state, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate
     label_style = {"color": "#FFF", "font-size": "14pt"}
     my_phaser._gpios.gpio_burst = 0
     my_phaser._gpios.gpio_burst = 1
@@ -643,58 +644,59 @@ def update():
     chan1 = data[0]
     chan2 = data[1]
     sum_data = chan1+chan2
-    
-    # select just the linear portion of the last chirp
-    rx_bursts = np.zeros((num_chirps, good_ramp_samples), dtype=complex)
-    for burst in range(num_chirps):
-        start_index = start_offset_samples + burst*num_samples_frame
-        stop_index = start_index + good_ramp_samples
-        rx_bursts[burst] = sum_data[start_index:stop_index]
-        burst_data = np.ones(fft_size, dtype=complex)*1e-10
-        #win_funct = np.blackman(len(rx_bursts[burst]))
-        win_funct = np.ones(len(rx_bursts[burst]))
-        burst_data[start_offset_samples:(start_offset_samples+good_ramp_samples)] = rx_bursts[burst]*win_funct
+    if end_state:
+        # select just the linear portion of the last chirp
+        rx_bursts = np.zeros((num_chirps, good_ramp_samples), dtype=complex)
+        for burst in range(num_chirps):
+            start_index = start_offset_samples + burst*num_samples_frame
+            stop_index = start_index + good_ramp_samples
+            rx_bursts[burst] = sum_data[start_index:stop_index]
+            burst_data = np.ones(fft_size, dtype=complex)*1e-10
+            #win_funct = np.blackman(len(rx_bursts[burst]))
+            win_funct = np.ones(len(rx_bursts[burst]))
+            burst_data[start_offset_samples:(start_offset_samples+good_ramp_samples)] = rx_bursts[burst]*win_funct
 
-    sp = np.absolute(np.fft.fft(burst_data))
-    sp = np.fft.fftshift(sp)
-    s_mag = np.abs(sp) / np.sum(win_funct)
-    s_mag = np.maximum(s_mag, 10 ** (-15))
-    s_dbfs = 20 * np.log10(s_mag / (2 ** 11))
+        sp = np.absolute(np.fft.fft(burst_data))
+        sp = np.fft.fftshift(sp)
+        s_mag = np.abs(sp) / np.sum(win_funct)
+        s_mag = np.maximum(s_mag, 10 ** (-15))
+        s_dbfs = 20 * np.log10(s_mag / (2 ** 11))
 
-    bias = win.cfar_bias.value()
-    num_guard_cells = win.cfar_guard.value()
-    num_ref_cells = win.cfar_ref.value()
-    cfar_method = 'average'
-    if (True):
-        threshold, targets = cfar(s_dbfs, num_guard_cells, num_ref_cells, bias, cfar_method)
-        s_dbfs_cfar = targets.filled(-200)  # fill the values below the threshold with -200 dBFS
-        s_dbfs_threshold = threshold
+        bias = win.cfar_bias.value()
+        num_guard_cells = win.cfar_guard.value()
+        num_ref_cells = win.cfar_ref.value()
+        cfar_method = 'average'
+        if (True):
+            threshold, targets = cfar(s_dbfs, num_guard_cells, num_ref_cells, bias, cfar_method)
+            s_dbfs_cfar = targets.filled(-200)  # fill the values below the threshold with -200 dBFS
+            s_dbfs_threshold = threshold
 
-    win.fft_threshold.setData(freq, s_dbfs_threshold)
-    if plot_threshold:
-        win.fft_threshold.setVisible(True)
-    else:
-        win.fft_threshold.setVisible(False)
+        win.fft_threshold.setData(freq, s_dbfs_threshold)
+        if plot_threshold:
+            win.fft_threshold.setVisible(True)
+        else:
+            win.fft_threshold.setVisible(False)
 
-    win.img_array = np.roll(win.img_array, 1, axis=0)
-    if cfar_toggle:
-        win.fft_curve.setData(freq, s_dbfs_cfar)
-        win.img_array[0] = s_dbfs_cfar
-    else:
-        win.fft_curve.setData(freq, s_dbfs)
-        win.img_array[0] = s_dbfs
-    win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])
-    win.imageitem.setImage(win.img_array, autoLevels=False)
-    # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
-    store_data(freq, s_dbfs)
-    
-    if index >= 258:
-        # win.quit_button.pressed.emit()
-        win.end_program()
-        print("enough data has been collected")
-    if index == 1:
-        win.fft_plot.enableAutoRange("xy", False)
-    index += 1
+        win.img_array = np.roll(win.img_array, 1, axis=0)
+        if cfar_toggle:
+            win.fft_curve.setData(freq, s_dbfs_cfar)
+            win.img_array[0] = s_dbfs_cfar
+        else:
+            win.fft_curve.setData(freq, s_dbfs)
+            win.img_array[0] = s_dbfs
+        win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])
+        win.imageitem.setImage(win.img_array, autoLevels=False)
+        # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
+        store_data(freq, s_dbfs)
+        
+        if index >= 258:
+            # win.quit_button.pressed.emit()
+            win.end_program()
+            print("enough data has been collected")
+            end_state = False
+        if index == 1:
+            win.fft_plot.enableAutoRange("xy", False)
+        index += 1
 
 timer = QtCore.QTimer()
 timer.timeout.connect(update)
