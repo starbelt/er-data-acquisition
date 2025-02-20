@@ -1,6 +1,6 @@
 # CFAR_RADAR_Waterfall_ChirpSync_Playback.py
 #
-# Usage: python3 CFAR_RADAR_Waterfall_ChirpSync_Playback.py <cfar_data_file path/name>
+# Usage: python3 CFAR_RADAR_Waterfall_ChirpSync_Playback.py <data_file path/name>
 #  
 # Description:
 #     This script reads in a CSV file containing CFAR data and displays the data in a waterfall plot.
@@ -29,17 +29,19 @@ from target_detection_dbfs import cfar
 import time
 
 # Global variables
-sample_rate = 0.6e6
+sample_rate = 0.682e6
 center_freq = 2.1e9
 signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
-default_chirp_bw = 500e6
+default_chirp_bw = 750e6
 ramp_time = 500      # ramp time in us
 num_slices = 400     # this sets how much time will be displayed on the waterfall plot
-fft_size = 1024
+fft_size = 1022
 # fft_size = 8192  
-plot_freq = 100e3    # x-axis freq range to plot
+plot_freq = 200e3    # x-axis freq range to plot
+max_dist = 6
+min_dist = -1
 
 last_error_time = None
 previous_time_since_start = 0
@@ -53,8 +55,6 @@ num_steps = int(ramp_time)    # in general it works best if there is 1 step per 
 
 c = 3e8
 wavelength = c / output_freq
-freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
-
 
 N = int(2**18)
 fc = int(signal_freq)
@@ -66,8 +66,13 @@ iq = 1 * (i + 1j * q)
 
 ramp_time_s = ramp_time / 1e6
 slope = BW / ramp_time_s
+upper_freq = (max_dist * 2 * slope / c) + signal_freq + 1
+lower_freq = (min_dist * 2 * slope / c) + signal_freq + 1
+freq = np.linspace(lower_freq, upper_freq , int(fft_size))
+# freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
 dist = (freq - signal_freq) * c / (2 * slope)
 plot_dist = False
+
 
 plot_threshold = False
 cfar_toggle = False
@@ -226,7 +231,7 @@ class Window(QMainWindow):
         self.fft_plot.setTitle("Received Signal - Frequency Spectrum", **title_style)
         layout.addWidget(self.fft_plot, 0, 2, self.num_rows, 1)
         self.fft_plot.setYRange(-60, 0)
-        self.fft_plot.setXRange(signal_freq, signal_freq+plot_freq)
+        self.fft_plot.setXRange(lower_freq, upper_freq)
         
         # Time since start label
         self.time_label = QLabel("Time Since Start: 0.0 s")  # Create time label
@@ -246,11 +251,11 @@ class Window(QMainWindow):
         self.imageitem.setLookupTable(lut)
         self.imageitem.setLevels([0,1])
         tr = QtGui.QTransform()
-        tr.translate(0,-sample_rate/2)
-        tr.scale(0.35, sample_rate / fft_size)
+        tr.translate(0,lower_freq)
+        tr.scale(1, (upper_freq - lower_freq) / fft_size)
         self.imageitem.setTransform(tr)
         zoom_freq = 35e3
-        self.waterfall.setRange(yRange=(signal_freq, signal_freq + zoom_freq))
+        self.waterfall.setRange(yRange=(lower_freq, upper_freq))
         self.waterfall.setTitle("Waterfall Spectrum", **title_style)
         self.waterfall.setLabel("left", "Frequency", units="Hz", **label_style)
         self.waterfall.setLabel("bottom", "Time", units="sec", **label_style)
@@ -342,7 +347,7 @@ def read_csv_data(filename):
         reader = csv.reader(file)
         next(reader)
         for row in reader:
-            data.append([row[0], float(row[1]), float(row[2]), float(row[3]), float(row[4]), float(row[5])])
+            data.append([float(row[0]), float(row[1]), float(row[2])])
     return data
 
 def update():
@@ -352,10 +357,9 @@ def update():
     if index >= len(cfar_data):
         index = 0
     
-    current_time_since_start = cfar_data[index][1]
-    s_dbfs = np.array([row[3] for row in cfar_data[index:index + fft_size]])
-    s_dbfs_cfar = np.array([row[4] for row in cfar_data[index:index + fft_size]])
-    s_dbfs_threshold = np.array([row[5] for row in cfar_data[index:index + fft_size]])
+    current_time_since_start = cfar_data[index][0]
+    s_dbfs = np.array([row[2] for row in cfar_data[index:index + 1022]])
+    freq = np.array([row[1] for row in cfar_data[index:index + 1022]])
     mismatch = False
     
     if s_dbfs.shape[0] != freq.shape[0]:
@@ -363,6 +367,7 @@ def update():
         old_freq = freq
         freq_overwrite = True
         freq = freq[:s_dbfs.shape[0]]
+        print("Freq changed")
         if last_error_time != current_time_since_start: #Error logging, but only for non-repeating errors
             last_error_time = current_time_since_start
             # Truncate freq to match the size of s_dbfs
@@ -370,6 +375,7 @@ def update():
     elif freq_overwrite:
         freq = old_freq
         freq_overwrite = False
+        
     
     delta_time = (current_time_since_start - previous_time_since_start) * 1000
     previous_time_since_start = current_time_since_start
@@ -420,11 +426,11 @@ def update():
     
     if index == 1:
         win.fft_plot.enableAutoRange("xy", False)
-    index += fft_size
+    index += 1022
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CFAR RADAR Waterfall Data Playback")
-    parser.add_argument("cfar_data_file", type=str, help="Filename for CFAR data CSV")
+    parser.add_argument("data_file", type=str, help="Filename for CFAR data CSV")
     args = parser.parse_args()
 
     App = QApplication(sys.argv)
@@ -432,7 +438,7 @@ if __name__ == "__main__":
     win.setWindowState(QtCore.Qt.WindowMaximized)
     index = 0
 
-    cfar_data = read_csv_data(args.cfar_data_file)
+    cfar_data = read_csv_data(args.data_file)
 
     timer = QtCore.QTimer()
     timer.timeout.connect(update)
