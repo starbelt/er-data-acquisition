@@ -23,11 +23,23 @@ This repository contains scripts for Continuous Wave (CW) and Frequency Modulate
 ## Requirements
 
 - Python
-- [Analog Devices Inc.](https://www.analog.com) components
+- [Analog Devices Inc.](https://www.analog.com) components (see [Hardware](#hardware))
+  - Ensure PLUTO-SDR is up to date
 - [PyQt5](https://pypi.org/project/PyQt5/)
 - [pyqtgraph](https://pypi.org/project/pyqtgraph/)
 - [NumPy](https://pypi.org/project/numpy/)
 - [Matplotlib](https://pypi.org/project/matplotlib/)
+- [OpenCV](https://pypi.org/project/opencv-python/)
+- [pylibiio](https://pypi.org/project/pylibiio/)
+- [pyadi-iio](https://pypi.org/project/pyadi-iio/)
+- [argparse](https://pypi.org/project/argparse/)
+- [csv](https://pypi.org/project/csv/)
+- [re](https://pypi.org/project/re/)
+- [collections](https://pypi.org/project/collections/)
+- [time](https://pypi.org/project/time/)
+- [sys](https://pypi.org/project/sys/)
+- [os](https://pypi.org/project/os/)
+- [datetime](https://pypi.org/project/datetime/)
 
 ## Installation
 
@@ -36,7 +48,8 @@ This repository contains scripts for Continuous Wave (CW) and Frequency Modulate
    git clone https://github.com/starbelt/er-data-acquisition
    cd er-data-acquisition
    ```
-2. Install the required Python packages:
+2. Install the required Python packages
+
 
 ## Usage
 
@@ -51,6 +64,7 @@ python CW/CW_RADAR_Waterfall.py
 ### CW Radar Waterfall Data Export
 
 This script initializes and configures the SDR and Phaser devices to perform Continuous Wave (CW) radar signal acquisition. It exports the data to CSV files. It is practically identical to CW_RADAR_Waterfall.py, but with data exporting to a csv.
+
 ```sh
 python CW/CW_RADAR_Waterfall_Export.py
 ```
@@ -77,6 +91,14 @@ This script initializes and configures the SDR and Phaser devices to perform Fre
 
 ```sh
 python FMCW/FMCW_RADAR_Waterfall_ChirpSync.py
+```
+
+### FMCW Velocity Radar Waterfall
+
+This script initializes and configures the SDR and Phaser devices to perform Frequency Modulated Continuous Wave (FMCW) radar signal acquisition and displays the velocity of the targets in an interactive FFT and waterfall plot.
+
+```sh
+python FMCW/FMCW_Velocity_RADAR_Waterfall.py
 ```
 
 ### CFAR Radar Waterfall
@@ -113,10 +135,42 @@ python CFAR/CFAR_RADAR_Waterfall_ChirpSync_Playback.py
 
 ### Target Detection dbfs
 
-This script performs target detection using dBFS values.
+This helper script performs target detection using dBFS values.
 
 ```sh
 python CFAR/target_detection_dbfs.py
+```
+
+### Range Doppler Processing
+
+This script processes the range and Doppler data from the radar signals. It includes functionalities for pulse cancellation and frequency processing.
+
+```sh
+python Range-Doppler/Range_Doppler_Processing.py
+```
+
+### Range Doppler Plot
+
+This script generates range-Doppler plots from the radar data.
+
+```sh
+python Range-Doppler/Range_Doppler_Plot.py
+```
+
+### CSV Shrinking
+
+This script reduces the size of CSV files by removing unnecessary data points.
+
+```sh
+python Utilities/csv_shrinking.py
+```
+
+### CSV to Image
+
+This script converts CSV data into image files for easier visualization.
+
+```sh
+python Utilities/csv_to_image.py
 ```
 
 ## Hardware
