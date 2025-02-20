@@ -1,0 +1,15 @@
+numpy
+matplotlib
+pyqt5
+pyqtgraph
+opencv-python
+pylibiio
+pyadi-iio
+argparse
+csv
+re
+collections
+time
+sys
+os
+datetime
