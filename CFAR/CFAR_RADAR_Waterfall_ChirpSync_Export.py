@@ -28,6 +28,7 @@ import datetime
 import os
 import adi
 from collections import defaultdict
+import cv2
 
 '''Key Parameters'''
 sample_rate = 0.682e6
@@ -46,6 +47,12 @@ start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
 c = 3e8
 
+measure_distance = 5 # m
+image_path = f"DataSet/{measure_distance}/Images"
+file_path = f"DataSet/{measure_distance}/CSV"
+
+magnitude_min = -100
+magnitude_max = 0
 
 filtered_data = defaultdict(list)
 
@@ -181,8 +188,8 @@ print("buffer_time:", buffer_time, " ms")
 c = 3e8
 wavelength = c / output_freq
 slope = BW / ramp_time_s
-upper_freq = (max_dist * 2 * slope / c) + signal_freq
-lower_freq = (min_dist * 2 * slope / c) + signal_freq
+upper_freq = (max_dist * 2 * slope / c) + signal_freq + 1
+lower_freq = (min_dist * 2 * slope / c) + signal_freq + 1
 # freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
 freq = np.linspace(lower_freq, upper_freq , int(fft_size))
 dist = (freq - signal_freq) * c / (2 * slope)
@@ -506,7 +513,7 @@ class Window(QMainWindow):
         tdd.channel[2].polarity = sdr_pins.gpio_phaser_enable
         tdd.enable = True
         tdd.enable = False
-        export_data_to_csv() # Export stored FFT data to CSV
+        export_data_to_csv() # Export stored FFT data to CSV and export image
         self.close()
 
     def change_thresh(self, state):
@@ -543,6 +550,11 @@ App = QApplication(sys.argv)
 win = Window()
 index = 0
 
+def downsample(data, target_size):
+    factor = len(data) // target_size
+    downsampled_data = np.mean(np.reshape(data[:factor * target_size], (-1, factor)), axis=1)
+    return downsampled_data
+
 def store_data(freq, s_dbfs):
     """ Stores the frequency and FFT magnitude data in a list
     Args:
@@ -561,6 +573,11 @@ def export_data_to_csv():
     Returns:
         None
     """
+    if not os.path.exists(image_path):
+        os.makedirs(image_path)
+    if not os.path.exists(file_path):
+        os.makedirs(file_path)
+        
     for row in data_list:
         t_since_start = float(row[0])
         frequency = float(row[1])
@@ -571,7 +588,7 @@ def export_data_to_csv():
     num_samples = len(filtered_data.keys())
     
     st = str(start_time).replace(":", ".").replace(" ", "_") # Remove ":" and replace spaces with "_"
-    filename = "filtered_cfar_data_" + st + "_fft_size_" + str(int(fft_size)) + "_sample_rate_" + "{:.2f}".format(sample_rate / 1e6) + "MHz_Sample_Size_" + str(num_per_sample) + "_" + str(num_samples)+".csv"  # Create filename
+    filename = f"{file_path}/filtered_cfar_data_{st}_fft_size_{int(fft_size)}_sample_rate_{sample_rate / 1e6:.2f}MHz_Sample_Size_{num_per_sample}_{num_samples}.csv"  # Create filename
     file_exists = os.path.isfile(filename)  # Check if file exists
     
     with open(filename, mode='a', newline='') as file:
@@ -581,6 +598,35 @@ def export_data_to_csv():
         for time_since_start in sorted(filtered_data.keys()):
             for row in filtered_data[time_since_start]:
                 writer.writerow(row)
+    print(f"Exported data to {filename}")
+    
+    image_file_name = f"{image_path}/{measure_distance}_m_{st}.png"
+    
+    image_data = defaultdict(list)
+    downsampled_data = []
+    for time_since_start in sorted(filtered_data.keys()):
+        for row in filtered_data[time_since_start]:
+            t_since_start = float(row[0])
+            magnitude = float(row[2])
+            shifted_magnitude = (magnitude - magnitude_min) / (magnitude_max - magnitude_min) * 225
+            image_data[t_since_start].append(shifted_magnitude)
+    
+    if num_samples < 225:
+        raise ValueError("Number of samples is less than 225")
+    
+    for t in sorted(image_data.keys())[1:225]:  # Skip the first time sample
+        downsampled_data.append(downsample(image_data[t], 224))
+
+    downsampled_data = np.array(downsampled_data).T
+    downsampled_data = np.flipud(downsampled_data)
+    
+    normalized_data = cv2.normalize(downsampled_data, None, 0, 255, cv2.NORM_MINMAX)
+    image_data = normalized_data.astype(np.uint8)
+    colored_image = cv2.applyColorMap(image_data, cv2.COLORMAP_VIRIDIS)
+    cv2.imwrite(image_file_name, colored_image)
+    
+    print(f"Exported image to {image_file_name}")
+    
 
 def update():
     """ Updates the FFT in the window
@@ -639,9 +685,11 @@ def update():
     # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
     store_data(freq, s_dbfs)
     
+    if index >= 258:
+        win.quit_button.pressed.emit()
     if index == 1:
         win.fft_plot.enableAutoRange("xy", False)
-    index = index + 1
+    index += 1
 
 timer = QtCore.QTimer()
 timer.timeout.connect(update)
