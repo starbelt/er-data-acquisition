@@ -70,7 +70,7 @@ plot_data = True
 mti_filter = False
 save_data = False   # saves data for later processing (use "Range_Doppler_Processing.py")
 f = "saved_radar_data.npy"
-v_range = 8
+max_doppler_vel = 5
 
 # %%
 """ Program the basic hardware settings
@@ -225,7 +225,7 @@ v_res = wavelength / (2 * num_bursts * PRI_s)
 # Doppler spectrum limits
 max_doppler_freq = PRF / 2
 # max_doppler_vel = max_doppler_freq * wavelength / 2
-max_doppler_vel = 5
+
 
 
 # %%
@@ -301,7 +301,7 @@ if plot_data == True:
     ax.set_xlabel('Velocity [m/s]', fontsize=22)
     ax.set_ylabel('Range [m]', fontsize=22)
     
-    ax.set_xlim([-10, 10])
+    ax.set_xlim([-max_doppler_vel, max_doppler_vel])
     ax.set_ylim([0, max_range])
     ax.set_yticks(np.arange(0, max_range, max_range/20))
     plt.xticks(fontsize=20)
