@@ -70,7 +70,7 @@ plot_data = True
 mti_filter = False
 save_data = False   # saves data for later processing (use "Range_Doppler_Processing.py")
 f = "saved_radar_data.npy"
-v_range = 3
+v_range = 8
 
 # %%
 """ Program the basic hardware settings
