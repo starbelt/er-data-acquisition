@@ -68,7 +68,7 @@ min_scale = 0
 max_scale = 10
 plot_data = True
 mti_filter = False
-save_data = False   # saves data for later processing (use "Range_Doppler_Processing.py")
+save_data = True   # saves data for later processing (use "Range_Doppler_Processing.py")
 f = "saved_radar_data.npy"
 max_doppler_vel = 5
 
