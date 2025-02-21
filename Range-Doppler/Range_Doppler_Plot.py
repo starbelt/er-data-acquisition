@@ -54,7 +54,7 @@ import adi
 print(adi.__version__)
 
 '''Key Parameters'''
-sample_rate = 4e6 
+sample_rate = .522e6 
 center_freq = 2.1e9
 signal_freq = 100e3
 rx_gain = 60   # must be between -3 and 70
@@ -63,9 +63,9 @@ output_freq = 9.9e9
 chirp_BW = 500e6
 ramp_time = 300  # us
 num_chirps = 256
-max_range = 6
+max_range = 10
 min_scale = 0
-max_scale = 6
+max_scale = 10
 plot_data = True
 mti_filter = False
 save_data = False   # saves data for later processing (use "Range_Doppler_Processing.py")
@@ -224,7 +224,8 @@ v_res = wavelength / (2 * num_bursts * PRI_s)
 
 # Doppler spectrum limits
 max_doppler_freq = PRF / 2
-max_doppler_vel = max_doppler_freq * wavelength / 2
+# max_doppler_vel = max_doppler_freq * wavelength / 2
+max_doppler_vel = 5
 
 
 # %%
@@ -293,7 +294,7 @@ if plot_data == True:
     except:
         print("Using an older version of MatPlotLIB")
         from matplotlib.cm import get_cmap
-        range_doppler = ax.imshow(radar_data, aspect='auto', vmin=0, vmax=v_range,
+        range_doppler = ax.imshow(radar_data, aspect='auto', vmin=0, vmax=8,
             extent=extent, origin='lower', cmap=get_cmap(cmn),
             )
     ax.set_title('Range Doppler Spectrum', fontsize=24)
