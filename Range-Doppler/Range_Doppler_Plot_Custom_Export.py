@@ -41,10 +41,12 @@
 # Imports
 import sys
 import time
-import matplotlib
-import matplotlib.pyplot as plt
+import matplotlib # type: ignore
+import matplotlib.pyplot as plt # type: ignore
 import numpy as np
 import datetime
+import os
+import csv
 plt.close('all')
 
 
@@ -52,7 +54,7 @@ plt.close('all')
    As of March 2024, this is in the main branch of https://github.com/analogdevicesinc/pyadi-iio
    Also, make sure your Pluto firmware is updated to rev 0.39 (or later)
 '''
-import adi
+import adi # type: ignore
 print(adi.__version__)
 
 '''Key Parameters'''
@@ -74,6 +76,7 @@ save_data = True   # saves data for later processing (use "Range_Doppler_Process
 start_time = datetime.datetime.now() # Get start time
 st = str(start_time).replace(":", ".").replace(" ", "_") # Remove ":" and replace spaces with "_" 
 f = f"DataExports/RangeDoppler/DefaultExports/range_doppler_{st}.npy"
+f_csv = f"{f[:-4]}.csv"
 max_doppler_vel = 4
 max_dist = 6
 min_dist = 0
@@ -301,7 +304,7 @@ if plot_data == True:
             )
     except:
         print("Using an older version of MatPlotLIB")
-        from matplotlib.cm import get_cmap
+        from matplotlib.cm import get_cmap # type: ignore
         range_doppler = ax.imshow(radar_data, aspect='auto', vmin=0, vmax=8,
             extent=extent, origin='lower', cmap=get_cmap(cmn),
             )
@@ -353,4 +356,16 @@ print("Pluto Buffer Cleared!")
 if save_data == True:
     np.save(f, all_data)
     np.save(f[:-4]+"_config.npy", [sample_rate, signal_freq, output_freq, num_chirps, chirp_BW, ramp_time_s, tdd.frame_length_ms])
-
+    
+    current_time = datetime.datetime.now()  # Get current time
+    time_since_start = (current_time - start_time).total_seconds()  # Calculate time since start in seconds
+    file_exists = os.path.isfile(f)  # Check if file exists
+    
+    with open(f_csv, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            # writer.writerow(["Time Since Start (s)", "Frequency (Hz)", "Magnitude (dBFS)"])
+            t="filler"
+        for row in radar_data[time_since_start]:
+            writer.writerow(row)
+    # print(f"Exported data to {f_csv}")
