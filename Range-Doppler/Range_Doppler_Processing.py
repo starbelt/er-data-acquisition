@@ -37,8 +37,8 @@
 
 # Imports
 import time
-import matplotlib
-import matplotlib.pyplot as plt
+import matplotlib # type: ignore
+import matplotlib.pyplot as plt # type: ignore
 import numpy as np
 plt.close('all')
 
@@ -48,8 +48,9 @@ all_data = np.load(f)
 
 MTI_filter = 'none'  # choices are none, 2pulse, or 3pulse
 max_range = 10
-min_scale = 4
-max_scale = 6
+min_scale = 3.5
+max_scale = 10
+max_doppler_vel = 5
 
 
 # %%
@@ -83,7 +84,7 @@ v_res = wavelength / (2 * num_chirps * PRI)
 
 # Doppler spectrum limits
 max_doppler_freq = PRF / 2
-max_doppler_vel = max_doppler_freq * wavelength / 2
+# max_doppler_vel = max_doppler_freq * wavelength / 2
 
 print("sample_rate = ", sample_rate/1e6, "MHz, ramp_time = ", int(ramp_time_s*(1e6)), "us, num_chirps = ", num_chirps, ", PRI = ", frame_length_ms, " ms")
 
@@ -137,14 +138,16 @@ def freq_process(data):
 cmn = ''
 i = 0
 raw_data = freq_process(all_data[i])
+# print(raw_data.shape)
+# print(raw_data)
 i=int((i+1) % len(all_data))
 range_doppler_fig, ax = plt.subplots(1, figsize=(7,7))
 extent = [-max_doppler_vel, max_doppler_vel, dist.min(), dist.max()]
 cmaps = ['inferno', 'plasma']
 cmn = cmaps[0]
-ax.set_xlim([-12, 12])
+ax.set_xlim([-max_doppler_vel, max_doppler_vel])
 ax.set_ylim([0, max_range])
-ax.set_yticks(np.arange(0, max_range, 10))
+ax.set_yticks(np.arange(0, max_range, 1))
 ax.set_ylabel('Range [m]')
 ax.set_title('Range Doppler Spectrum')
 ax.set_xlabel('Velocity [m/s]')
