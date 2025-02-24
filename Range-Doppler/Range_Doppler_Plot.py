@@ -41,8 +41,8 @@
 # Imports
 import sys
 import time
-import matplotlib
-import matplotlib.pyplot as plt
+import matplotlib # type: ignore
+import matplotlib.pyplot as plt # type: ignore
 import numpy as np
 import datetime
 plt.close('all')
@@ -52,7 +52,7 @@ plt.close('all')
    As of March 2024, this is in the main branch of https://github.com/analogdevicesinc/pyadi-iio
    Also, make sure your Pluto firmware is updated to rev 0.39 (or later)
 '''
-import adi
+import adi # type: ignore
 print(adi.__version__)
 
 '''Key Parameters'''
@@ -297,7 +297,7 @@ if plot_data == True:
             )
     except:
         print("Using an older version of MatPlotLIB")
-        from matplotlib.cm import get_cmap
+        from matplotlib.cm import get_cmap # type: ignore
         range_doppler = ax.imshow(radar_data, aspect='auto', vmin=0, vmax=8,
             extent=extent, origin='lower', cmap=get_cmap(cmn),
             )
