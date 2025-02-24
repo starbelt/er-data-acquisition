@@ -376,5 +376,6 @@ if save_data == True:
         writer = csv.writer(file)
         if not file_exists:
             writer.writerow(["Time Since Start (s)"])
-        writer.writerow([time_since_start])
+        for t in current_time:
+            writer.writerow([t])
     # print(f"Exported data to {f_csv}")
