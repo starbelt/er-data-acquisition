@@ -44,7 +44,9 @@ import time
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import datetime
 plt.close('all')
+
 
 '''This script uses the new Pluto TDD engine
    As of March 2024, this is in the main branch of https://github.com/analogdevicesinc/pyadi-iio
@@ -69,7 +71,9 @@ max_scale = 10
 plot_data = True
 mti_filter = False
 save_data = True   # saves data for later processing (use "Range_Doppler_Processing.py")
-f = "saved_radar_data.npy"
+start_time = datetime.datetime.now() # Get start time
+st = str(start_time).replace(":", ".").replace(" ", "_") # Remove ":" and replace spaces with "_" 
+f = f"DataExports/RangeDoppler/DefaultExports/range_doppler_{st}.npy"
 max_doppler_vel = 5
 
 # %%
