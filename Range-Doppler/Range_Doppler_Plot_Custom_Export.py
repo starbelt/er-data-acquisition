@@ -358,9 +358,7 @@ print("Pluto Buffer Cleared!")
 if save_data == True:
     np.save(f, all_data)
     np.save(f[:-4]+"_config.npy", [sample_rate, signal_freq, output_freq, num_chirps, chirp_BW, ramp_time_s, tdd.frame_length_ms])
-    
-    current_time = datetime.datetime.now()  # Get current time
-    time_since_start = (current_time - start_time).total_seconds()  # Calculate time since start in seconds
+
     file_exists = os.path.isfile(f)  # Check if file exists
     
     with open(f_csv, mode='a', newline='') as file:
