@@ -292,6 +292,7 @@ def freq_process(data):
 rx_bursts = get_radar_data()
 radar_data = freq_process(rx_bursts)
 all_data = []
+current_time = []
 
 if plot_data == True:
     range_doppler_fig, ax = plt.subplots(figsize=(14, 7))
@@ -326,6 +327,7 @@ try:
         rx_bursts = get_radar_data()
         if save_data == True:
             all_data.append(rx_bursts)
+            current_time.append(datetime.datetime.now())
             print("save")
         if plot_data == True:
             if mti_filter == True:
