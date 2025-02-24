@@ -77,7 +77,7 @@ start_time = datetime.datetime.now() # Get start time
 st = str(start_time).replace(":", ".").replace(" ", "_") # Remove ":" and replace spaces with "_" 
 f = f"DataExports/RangeDoppler/DefaultExports/range_doppler_{st}.npy"
 f_csv = f"{f[:-4]}.csv"
-max_doppler_vel = 4
+max_doppler_vel = 3
 max_dist = 6
 min_dist = 0
 
@@ -370,4 +370,11 @@ if save_data == True:
             t="filler"
         for row in radar_data:
             writer.writerow(row)
+    f_time = f"{f[:-4]}_time.csv"
+    
+    with open(f_time, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(["Time Since Start (s)"])
+        writer.writerow([time_since_start])
     # print(f"Exported data to {f_csv}")
