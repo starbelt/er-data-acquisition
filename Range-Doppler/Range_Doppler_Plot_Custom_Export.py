@@ -366,6 +366,6 @@ if save_data == True:
         if not file_exists:
             # writer.writerow(["Time Since Start (s)", "Frequency (Hz)", "Magnitude (dBFS)"])
             t="filler"
-        for row in radar_data[time_since_start]:
+        for row in radar_data:
             writer.writerow(row)
     # print(f"Exported data to {f_csv}")
