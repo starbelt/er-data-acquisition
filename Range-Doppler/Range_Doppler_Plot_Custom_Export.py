@@ -58,7 +58,7 @@ import adi # type: ignore
 print(adi.__version__)
 
 '''Key Parameters'''
-sample_rate = .522e6 
+sample_rate = .6e6 
 center_freq = 2.1e9
 signal_freq = 100e3
 rx_gain = 60   # must be between -3 and 70
@@ -225,7 +225,7 @@ c = 3e8
 wavelength = c / output_freq
 slope = BW / ramp_time_s
 upper_freq = (max_dist * 2 * slope / c) + signal_freq + 1
-lower_freq = (min_dist * 2 * slope / c) + signal_freq + 1
+lower_freq = (min_dist * 2 * slope / c) + signal_freq - 1
 freq = np.linspace(lower_freq, upper_freq, N_frame)
 dist = (freq - signal_freq) * c / (2 * slope)
 
@@ -363,7 +363,7 @@ if save_data == True:
     for t in current_time:
             t_diff = float((t - start_time).total_seconds())
     np.save(f, all_data)
-    np.save(f[:-4]+"_config.npy", [sample_rate, signal_freq, output_freq, num_chirps, chirp_BW, ramp_time_s, tdd.frame_length_ms, max_doppler_vel, max_range])
+    np.save(f[:-4]+"_config.npy", [sample_rate, signal_freq, output_freq, num_chirps, chirp_BW, ramp_time_s, tdd.frame_length_ms, max_doppler_vel, max_range, upper_freq, lower_freq])
 
     file_exists = os.path.isfile(f)  # Check if file exists
     
