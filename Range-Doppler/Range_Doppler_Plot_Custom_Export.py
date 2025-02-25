@@ -263,9 +263,9 @@ cmn = ''
 def get_radar_data():
     global range_doppler
     # Collect data
-    my_phaser._gpios.gpio_burst = 0
-    my_phaser._gpios.gpio_burst = 1
-    my_phaser._gpios.gpio_burst = 0
+    # my_phaser._gpios.gpio_burst = 0
+    # my_phaser._gpios.gpio_burst = 1
+    # my_phaser._gpios.gpio_burst = 0
     data = my_sdr.rx()
     chan1 = data[0]
     chan2 = data[1]
@@ -325,6 +325,9 @@ if plot_data == True:
 # plt.pause(.01)
 try:
     while True:
+        my_phaser._gpios.gpio_burst = 0
+        my_phaser._gpios.gpio_burst = 1
+        my_phaser._gpios.gpio_burst = 0
         rx_bursts = get_radar_data()
         if save_data == True:
             all_data.append(rx_bursts)
