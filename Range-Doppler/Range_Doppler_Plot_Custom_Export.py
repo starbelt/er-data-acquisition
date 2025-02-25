@@ -357,6 +357,9 @@ except KeyboardInterrupt:  # press ctrl-c to stop the loop
 my_sdr.tx_destroy_buffer()
 print("Pluto Buffer Cleared!")
 if save_data == True:
+    folder = f[:-18]
+    if not os.path.exists(folder):
+        os.makedirs(folder)
     for t in current_time:
             t_diff = float((t - start_time).total_seconds())
     np.save(f, all_data)
