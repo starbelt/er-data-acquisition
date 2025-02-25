@@ -64,6 +64,7 @@ time_divider = 1
 # %%
 """ Calculate and print summary of ramp parameters
 """
+print(config[9])
 sample_rate = config[0]
 signal_freq = config[1]
 output_freq = config[2]
@@ -75,6 +76,7 @@ max_doppler_vel = config[7] if len(config) > 7 else 1.5
 max_range = config[8] if len(config) > 8 else 10
 time_data = config[9] if len(config) > 9 else pd.read_csv(f"{f[:-4]}_time.csv")
 num_samples = len(all_data[0][0])
+
 
 data_start_time = time_data.iloc[0, 0]  # Get first timestamp
 
