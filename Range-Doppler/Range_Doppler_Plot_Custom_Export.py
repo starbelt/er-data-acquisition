@@ -348,8 +348,8 @@ try:
             radar_data = freq_process(rx_bursts)
             range_doppler.set_data(radar_data)
             plt.show(block=False)
-            plt.pause(.1)
-        time.sleep(.1)  # Add a system pause of 1 second
+            plt.pause(.01)
+        # time.sleep(.1)  # Add a system pause of 1 second
 except KeyboardInterrupt:  # press ctrl-c to stop the loop
     pass
 
