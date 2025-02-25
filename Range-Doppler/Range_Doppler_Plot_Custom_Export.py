@@ -372,13 +372,13 @@ if save_data == True:
         for row in radar_data:
             writer.writerow(row)
     
-    # f_time = f"{f[:-4]}_time.csv"
-    #
-    # with open(f_time, mode='a', newline='') as file:
-    #     writer = csv.writer(file)
-    #     if not file_exists:
-    #         writer.writerow(["Time Since Start (s)"])
-    #     for t in current_time:
-    #         t_diff = float((t - start_time).total_seconds())
-    #         writer.writerow([t_diff])
+    f_time = f"{f[:-4]}_time.csv"
+    
+    with open(f_time, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(["Time Since Start (s)"])
+        for t in current_time:
+            t_diff = float((t - start_time).total_seconds())
+            writer.writerow([t_diff])
     # print(f"Exported data to {f_csv}")
