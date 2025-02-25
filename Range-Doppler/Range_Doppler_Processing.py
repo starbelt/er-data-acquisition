@@ -64,7 +64,6 @@ time_divider = 1
 # %%
 """ Calculate and print summary of ramp parameters
 """
-print(config[9])
 sample_rate = config[0]
 signal_freq = config[1]
 output_freq = config[2]
@@ -74,6 +73,8 @@ ramp_time_s = config[5]
 frame_length_ms = config[6]
 max_doppler_vel = config[7] if len(config) > 7 else 1.5
 max_range = config[8] if len(config) > 8 else 10
+upper_freq = config[9] if len(config) > 9 else -sample_rate/2
+lower_freq = config[10] if len(config) > 10 else sample_rate/2
 time_data = pd.read_csv(f"{f[:-4]}_time.csv")
 num_samples = len(all_data[0][0])
 
@@ -90,7 +91,7 @@ N_frame = int(PRI * float(sample_rate))
 c = 3e8
 wavelength = c / output_freq
 slope = chirp_BW / ramp_time_s
-freq = np.linspace(-sample_rate / 2, sample_rate / 2, N_frame)
+freq = np.linspace(lower_freq, upper_freq, N_frame)
 dist = (freq - signal_freq) * c / (2 * slope)
 
 # Resolutions
