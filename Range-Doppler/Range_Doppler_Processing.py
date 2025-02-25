@@ -49,12 +49,10 @@ all_data = np.load(f)
 time_data = pd.read_csv(f"{f[:-4]}_time.csv")
 data_start_time = time_data.iloc[0, 0]  # Get first timestamp
 
-MTI_filter = 'none'  # choices are none, 2pulse, or 3pulse
-max_range = 10
+MTI_filter = '3pulse'  # choices are none, 2pulse, or 3pulse
 min_scale = 4
 max_scale = 6
-max_doppler_vel = 1.5
-step_thru_plots = True
+step_thru_plots = False
 time_divider = 1
 
 
@@ -68,6 +66,9 @@ num_chirps = int(config[3])
 chirp_BW = config[4]
 ramp_time_s = config[5]
 frame_length_ms = config[6]
+max_doppler_vel = config[7]
+max_range = config[8]
+time_data = config[9]
 num_samples = len(all_data[0][0])
 
 PRI = frame_length_ms / 1e3
@@ -85,7 +86,9 @@ dist = (freq - signal_freq) * c / (2 * slope)
 
 # Resolutions
 R_res = c / (2 * chirp_BW)
+print(R_res)
 v_res = wavelength / (2 * num_chirps * PRI)
+print(v_res)
 
 # Doppler spectrum limits
 max_doppler_freq = PRF / 2
