@@ -68,8 +68,8 @@ chirp_BW = 500e6
 ramp_time = 300  # us
 num_chirps = 256
 max_range = 10
-min_scale = 0
-max_scale = 10
+min_scale = 3
+max_scale = 7
 plot_data = False
 mti_filter = False
 save_data = True   # saves data for later processing (use "Range_Doppler_Processing.py")
@@ -231,8 +231,9 @@ dist = (freq - signal_freq) * c / (2 * slope)
 
 # Resolutions
 R_res = c / (2 * BW)
+print(R_res)
 v_res = wavelength / (2 * num_bursts * PRI_s)
-
+print(v_res)
 # Doppler spectrum limits
 max_doppler_freq = PRF / 2
 # max_doppler_vel = max_doppler_freq * wavelength / 2
@@ -356,8 +357,10 @@ except KeyboardInterrupt:  # press ctrl-c to stop the loop
 my_sdr.tx_destroy_buffer()
 print("Pluto Buffer Cleared!")
 if save_data == True:
+    for t in current_time:
+            t_diff = float((t - start_time).total_seconds())
     np.save(f, all_data)
-    np.save(f[:-4]+"_config.npy", [sample_rate, signal_freq, output_freq, num_chirps, chirp_BW, ramp_time_s, tdd.frame_length_ms])
+    np.save(f[:-4]+"_config.npy", [sample_rate, signal_freq, output_freq, num_chirps, chirp_BW, ramp_time_s, tdd.frame_length_ms, max_doppler_vel, max_range, t_diff])
 
     file_exists = os.path.isfile(f)  # Check if file exists
     
@@ -368,13 +371,14 @@ if save_data == True:
             t="filler"
         for row in radar_data:
             writer.writerow(row)
-    f_time = f"{f[:-4]}_time.csv"
     
-    with open(f_time, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            writer.writerow(["Time Since Start (s)"])
-        for t in current_time:
-            t_diff = float((t - start_time).total_seconds())
-            writer.writerow([t_diff])
+    # f_time = f"{f[:-4]}_time.csv"
+    #
+    # with open(f_time, mode='a', newline='') as file:
+    #     writer = csv.writer(file)
+    #     if not file_exists:
+    #         writer.writerow(["Time Since Start (s)"])
+    #     for t in current_time:
+    #         t_diff = float((t - start_time).total_seconds())
+    #         writer.writerow([t_diff])
     # print(f"Exported data to {f_csv}")
