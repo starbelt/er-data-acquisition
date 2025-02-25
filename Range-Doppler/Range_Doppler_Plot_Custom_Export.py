@@ -70,9 +70,9 @@ num_chirps = 128
 max_range = 10
 min_scale = 3
 max_scale = 7
-plot_data = True
+plot_data = False
 mti_filter = False
-save_data = False   # saves data for later processing (use "Range_Doppler_Processing.py")
+save_data = True   # saves data for later processing (use "Range_Doppler_Processing.py")
 start_time = datetime.datetime.now() # Get start time
 st = str(start_time).replace(":", ".").replace(" ", "_") # Remove ":" and replace spaces with "_" 
 f = f"DataExports/RangeDoppler/DefaultExports/{st}/range_doppler.npy"
@@ -348,7 +348,7 @@ try:
             radar_data = freq_process(rx_bursts)
             range_doppler.set_data(radar_data)
             plt.show(block=False)
-            plt.pause(.1)
+        plt.pause(.1)
 except KeyboardInterrupt:  # press ctrl-c to stop the loop
     pass
 
