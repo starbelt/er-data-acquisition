@@ -70,7 +70,7 @@ num_chirps = 128
 max_range = 10
 min_scale = 3
 max_scale = 7
-plot_data = True
+plot_data = False
 mti_filter = False
 save_data = True   # saves data for later processing (use "Range_Doppler_Processing.py")
 start_time = datetime.datetime.now() # Get start time
@@ -322,7 +322,7 @@ if plot_data == True:
     
     print("sample_rate = ", sample_rate/1e6, "MHz, ramp_time = ", ramp_time, "us, num_chirps = ", num_chirps)
     print("CTRL + c to stop the loop")
-plt.pause(.01)
+# plt.pause(.01)
 try:
     while True:
         rx_bursts = get_radar_data()
@@ -348,8 +348,9 @@ try:
             radar_data = freq_process(rx_bursts)
             range_doppler.set_data(radar_data)
             plt.show(block=False)
-            # plt.pause(.01)
-        # time.sleep(.1)  # Add a system pause of 1 second
+            plt.pause(.1)
+        else:
+            time.sleep(tdd.frame_length_ms / 1000.0)
 except KeyboardInterrupt:  # press ctrl-c to stop the loop
     pass
 
