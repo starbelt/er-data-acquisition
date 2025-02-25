@@ -322,7 +322,7 @@ if plot_data == True:
     
     print("sample_rate = ", sample_rate/1e6, "MHz, ramp_time = ", ramp_time, "us, num_chirps = ", num_chirps)
     print("CTRL + c to stop the loop")
-
+plt.pause(.01)
 try:
     while True:
         rx_bursts = get_radar_data()
