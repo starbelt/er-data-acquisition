@@ -360,7 +360,7 @@ if save_data == True:
     for t in current_time:
             t_diff = float((t - start_time).total_seconds())
     np.save(f, all_data)
-    np.save(f[:-4]+"_config.npy", [sample_rate, signal_freq, output_freq, num_chirps, chirp_BW, ramp_time_s, tdd.frame_length_ms, max_doppler_vel, max_range, t_diff])
+    np.save(f[:-4]+"_config.npy", [sample_rate, signal_freq, output_freq, num_chirps, chirp_BW, ramp_time_s, tdd.frame_length_ms, max_doppler_vel, max_range])
 
     file_exists = os.path.isfile(f)  # Check if file exists
     
