@@ -263,7 +263,8 @@ cmn = ''
 def get_radar_data():
     global range_doppler
     # Collect data
-    print("getdata start"+datetime.datetime.now())
+    print("getdata start")
+    print(datetime.datetime.now())
     
     my_phaser._gpios.gpio_burst = 0
     my_phaser._gpios.gpio_burst = 1
@@ -280,7 +281,8 @@ def get_radar_data():
         start_index = start_offset_samples + burst * N_frame
         stop_index = start_index + good_ramp_samples
         rx_bursts[burst] = sum_data[start_index:stop_index]
-    print("getdata stop"+datetime.datetime.now())
+    print("getdata stop")
+    print(datetime.datetime.now())
     return rx_bursts
 
 def freq_process(data):
@@ -327,7 +329,8 @@ if plot_data == True:
 # plt.pause(.01)
 try:
     while True:
-        print("try start"+datetime.datetime.now())
+        print("try start")
+        print(datetime.datetime.now())
         rx_bursts = get_radar_data()
         if save_data == True:
             all_data.append(rx_bursts)
@@ -353,9 +356,11 @@ try:
             plt.show(block=False)
             plt.pause(.1)
         else:
-            print("sleep start"+datetime.datetime.now())
+            print("sleep start")
+            print(datetime.datetime.now())
             time.sleep(tdd.frame_length_ms / 1000.0)
-        print("try start"+datetime.datetime.now())
+        print("try stop")
+        print(datetime.datetime.now())
 except KeyboardInterrupt:  # press ctrl-c to stop the loop
     pass
 
