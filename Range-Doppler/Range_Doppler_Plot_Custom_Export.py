@@ -66,7 +66,7 @@ tx_gain = 0   # must be between 0 and -88
 output_freq = 10e9
 chirp_BW = 500e6
 ramp_time = 300  # us
-num_chirps = 128
+num_chirps = 256
 # max_range = 10
 min_scale = 3
 max_scale = 7
@@ -78,7 +78,7 @@ st = str(start_time).replace(":", ".").replace(" ", "_") # Remove ":" and replac
 f = f"DataExports/RangeDoppler/DefaultExports/{st}/range_doppler.npy"
 f_csv = f"{f[:-4]}.csv"
 max_doppler_vel = 1.5
-max_dist = 6
+max_dist = 10
 min_dist = 0
 max_range = max_dist
 
