@@ -327,7 +327,7 @@ if plot_data == True:
     print("sample_rate = ", sample_rate/1e6, "MHz, ramp_time = ", ramp_time, "us, num_chirps = ", num_chirps)
     print("CTRL + c to stop the loop")
 # plt.pause(.01)
-good_samples_time = good_ramp_samples / sample_rate
+
 try:
     while True:
         # print("try start")
@@ -359,7 +359,9 @@ try:
         else:
             # print("sleep start")
             # print(datetime.datetime.now())
-            time.sleep(good_samples_time)
+            time.sleep(PRI_s)
+            # good_samples_time = good_ramp_samples / sample_rate
+            # time.sleep(good_samples_time)
         # print("try stop")
         # print(datetime.datetime.now())
 except KeyboardInterrupt:  # press ctrl-c to stop the loop
