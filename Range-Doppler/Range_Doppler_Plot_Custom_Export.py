@@ -359,9 +359,8 @@ try:
         else:
             # print("sleep start")
             # print(datetime.datetime.now())
-            time.sleep(PRI_s)
-            # good_samples_time = good_ramp_samples / sample_rate
-            # time.sleep(good_samples_time)
+            good_samples_time = good_ramp_samples / sample_rate
+            time.sleep(PRI_s - good_samples_time)
         # print("try stop")
         # print(datetime.datetime.now())
 except KeyboardInterrupt:  # press ctrl-c to stop the loop
