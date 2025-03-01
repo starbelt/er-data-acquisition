@@ -3,8 +3,6 @@ matplotlib
 pyqt5
 pyqtgraph
 opencv-python
-pylibiio
-pyadi-iio
 argparse
 csv
 re
@@ -13,3 +11,4 @@ time
 sys
 os
 datetime
+pandas
