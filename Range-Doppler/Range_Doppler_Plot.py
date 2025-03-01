@@ -68,9 +68,9 @@ num_chirps = 256
 max_range = 10
 min_scale = 0
 max_scale = 10
-plot_data = False
+plot_data = True
 mti_filter = False
-save_data = True   # saves data for later processing (use "Range_Doppler_Processing.py")
+save_data = False   # saves data for later processing (use "Range_Doppler_Processing.py")
 start_time = datetime.datetime.now() # Get start time
 st = str(start_time).replace(":", ".").replace(" ", "_") # Remove ":" and replace spaces with "_" 
 f = f"DataExports/RangeDoppler/DefaultExports/range_doppler_{st}.npy"
@@ -80,9 +80,8 @@ max_doppler_vel = 5
 """ Program the basic hardware settings
 """
 # Instantiate all the Devices
-rpi_ip = "ip:phaser.local"  # IP address of the Raspberry Pi
-sdr_ip = "ip:192.168.2.1"  # "192.168.2.1, or pluto.local"  # IP address of the Transceiver Block
-#sdr_ip = "ip:phaser.local:50901"  # using IIO context port forwarding
+rpi_ip = "ip:19.168.55.100"  # IP address of the Raspberry Pi
+sdr_ip = "ip:192.168.55.100:50901"  # "192.168.2.1, or pluto.local"  # IP address of the Transceiver Block
 my_sdr = adi.ad9361(uri=sdr_ip)
 my_phaser = adi.CN0566(uri=rpi_ip, sdr=my_sdr)
 
