@@ -179,7 +179,7 @@ print("Total Time for all Chirps:  ", total_time, "ms")
 buffer_time = total_time + 1.0
 if buffer_time < 10:
     buffer_time = 10
-buffer_size = buffer_time*my_sdr.sample_rate/1000
+buffer_size = int(buffer_time*my_sdr.sample_rate/1000)
 # power=12
 # while total_time > buffer_time:     
 #     power=power+1
