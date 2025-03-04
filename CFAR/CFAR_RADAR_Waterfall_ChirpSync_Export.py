@@ -177,6 +177,8 @@ print("fft_size =", fft_size)
 total_time = tdd.frame_length_ms * num_chirps   # time in ms
 print("Total Time for all Chirps:  ", total_time, "ms")
 buffer_time = total_time + 1.0
+if buffer_time < 10:
+    buffer_time = 10
 buffer_size = buffer_time*my_sdr.sample_rate/1000
 # power=12
 # while total_time > buffer_time:     
