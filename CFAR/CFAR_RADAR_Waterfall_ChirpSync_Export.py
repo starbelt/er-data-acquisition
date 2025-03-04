@@ -671,33 +671,31 @@ def update():
             s_mag = np.abs(sp) / np.sum(win_funct)
             s_mag = np.maximum(s_mag, 10 ** (-15))
             s_dbfs = 20 * np.log10(s_mag / (2 ** 11))
-
-            bias = win.cfar_bias.value()
-            num_guard_cells = win.cfar_guard.value()
-            num_ref_cells = win.cfar_ref.value()
-            cfar_method = 'average'
-            if (True):
-                threshold, targets = cfar(s_dbfs, num_guard_cells, num_ref_cells, bias, cfar_method)
-                s_dbfs_cfar = targets.filled(-200)  # fill the values below the threshold with -200 dBFS
-                s_dbfs_threshold = threshold
-
-            win.fft_threshold.setData(freq, s_dbfs_threshold)
-            if plot_threshold:
-                win.fft_threshold.setVisible(True)
-            else:
-                win.fft_threshold.setVisible(False)
-
-            win.img_array = np.roll(win.img_array, 1, axis=0)
-            if cfar_toggle:
-                win.fft_curve.setData(freq, s_dbfs_cfar)
-                win.img_array[0] = s_dbfs_cfar
-            else:
-                win.fft_curve.setData(freq, s_dbfs)
-                win.img_array[0] = s_dbfs
-            win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])
-            win.imageitem.setImage(win.img_array, autoLevels=False)
-            # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
             store_data(freq, s_dbfs)
+        bias = win.cfar_bias.value()
+        num_guard_cells = win.cfar_guard.value()
+        num_ref_cells = win.cfar_ref.value()
+        cfar_method = 'average'
+        if (True):
+            threshold, targets = cfar(s_dbfs, num_guard_cells, num_ref_cells, bias, cfar_method)
+            s_dbfs_cfar = targets.filled(-200)  # fill the values below the threshold with -200 dBFS
+            s_dbfs_threshold = threshold
+        win.fft_threshold.setData(freq, s_dbfs_threshold)
+        if plot_threshold:
+            win.fft_threshold.setVisible(True)
+        else:
+            win.fft_threshold.setVisible(False)
+        win.img_array = np.roll(win.img_array, 1, axis=0)
+        if cfar_toggle:
+            win.fft_curve.setData(freq, s_dbfs_cfar)
+            win.img_array[0] = s_dbfs_cfar
+        else:
+            win.fft_curve.setData(freq, s_dbfs)
+            win.img_array[0] = s_dbfs
+        win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])
+        win.imageitem.setImage(win.img_array, autoLevels=False)
+        # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
+        
         
         if index > img_size+1:
             # win.quit_button.pressed.emit()
