@@ -37,7 +37,7 @@ signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
 default_chirp_bw = 750e6
-ramp_time = 250      # ramp time in us
+ramp_time = 500      # ramp time in us
 num_slices = 112 * 4  # number of slices in the waterfall plot
 max_dist = 89 * 2.54 / 100 # 89 inches to meters
 min_dist = 0
@@ -703,7 +703,7 @@ def update():
             end_state = False
         if index == 1:
             win.fft_plot.enableAutoRange("xy", False)
-        index += 1
+        index += num_chirps
 
 timer = QtCore.QTimer()
 timer.timeout.connect(update)
