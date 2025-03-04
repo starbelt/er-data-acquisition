@@ -38,10 +38,9 @@ rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
 default_chirp_bw = 750e6
 ramp_time = 500      # ramp time in us
-num_slices = 112 * 4  
-plot_freq = 200e3    # x-axis freq range to plot
-max_dist = 6
-min_dist = 3
+num_slices = 112 * 4  # number of slices in the waterfall plot
+max_dist = 89 * 2.54 / 100 # 89 inches to meters
+min_dist = 0
 
 img_size = 56
 
@@ -49,7 +48,11 @@ start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
 c = 3e8
 
-measure_distance = "38-57_in" 
+binmin = 38 # inches
+binmin = binmin * 2.54 / 100  # convert to meters
+binmax = 57 # inches
+binmax = binmax * 2.54 / 100  # convert to meters
+measure_distance = f"{binmin:.2f}-{binmax:.2f}m" 
 image_path = f"DataSet/{measure_distance}/Images"
 file_path = f"DataSet/{measure_distance}/CSV"
 end_state = True
@@ -193,6 +196,8 @@ wavelength = c / output_freq
 slope = BW / ramp_time_s
 upper_freq = (max_dist * 2 * slope / c) + signal_freq + 1
 lower_freq = (min_dist * 2 * slope / c) + signal_freq + 1
+maxbin_freq = (binmax * 2 * slope / c) + signal_freq + 1
+minbin_freq = (binmin * 2 * slope / c) + signal_freq + 1
 # freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
 freq = np.linspace(lower_freq, upper_freq , int(fft_size))
 dist = (freq - signal_freq) * c / (2 * slope)
