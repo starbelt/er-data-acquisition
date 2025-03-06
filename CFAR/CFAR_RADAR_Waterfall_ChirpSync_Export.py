@@ -614,9 +614,39 @@ win = Window()
 index = 0
 
 def downsample(data, target_size):
-    factor = len(data) // target_size
-    downsampled_data = np.mean(np.reshape(data[:factor * target_size], (-1, factor)), axis=1)
-    return downsampled_data
+    """Downsample data to target size with robust error handling"""
+    # Handle empty arrays
+    if len(data) == 0:
+        return np.zeros(target_size)
+        
+    # Handle case where data is smaller than target size
+    if len(data) < target_size:
+        # Pad with zeros to reach target size
+        print("Data input below target size")
+        padded = np.zeros(target_size)
+        padded[:len(data)] = data
+        return padded
+    
+    # Normal downsampling for when data is larger than target size
+    factor = max(1, len(data) // target_size)  # Ensure factor is at least 1
+    
+    # Calculate how many elements we can use (must be divisible by factor)
+    usable_size = (len(data) // factor) * factor
+    print("usable size: ", usable_size)
+    # Only use as many points as we can reshape properly
+    if usable_size > 0:
+        reshaped = np.reshape(data[:usable_size], (-1, factor))
+        downsampled = np.mean(reshaped, axis=1)
+        # Ensure we return exactly target_size elements
+        if len(downsampled) > target_size:
+            return downsampled[:target_size]
+        elif len(downsampled) < target_size:
+            padded = np.zeros(target_size)
+            padded[:len(downsampled)] = downsampled
+            return padded
+        return downsampled
+    else:
+        return np.zeros(target_size)
 
 def store_data(freq, s_dbfs):
     """ Stores the frequency and FFT magnitude data in a list
@@ -759,8 +789,6 @@ def update():
         win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])
         win.imageitem.setImage(win.img_array, autoLevels=False)
         # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
-        
-        
         
         if index > img_size +1 and end_state:
             # win.quit_button.pressed.emit()
