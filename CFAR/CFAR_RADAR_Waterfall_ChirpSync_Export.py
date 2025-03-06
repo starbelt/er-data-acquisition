@@ -54,7 +54,7 @@ c = 3e8
 
 binmin = 0 # inches
 binmin = binmin * 2.54 / 100  # convert to meters
-binmax = 57 # inches
+binmax = 89 # inches
 binmax = binmax * 2.54 / 100  # convert to meters
 measure_distance = f"{binmin:.2f}-{binmax:.2f}m" 
 image_path = f"DataSet/{measure_distance}/Images"
