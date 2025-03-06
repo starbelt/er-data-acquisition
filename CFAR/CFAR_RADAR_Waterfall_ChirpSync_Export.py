@@ -205,8 +205,10 @@ maxbin_freq = (binmax * 2 * slope / c) + signal_freq
 minbin_freq = (binmin * 2 * slope / c) + signal_freq
 print("maxbin_freq: ", maxbin_freq)
 print("minbin_freq: ", minbin_freq)
+print("upper_freq: ", upper_freq)
+print("lower_freq: ", lower_freq)
 # freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
-freq = np.linspace(0, upper_freq, int(fft_size))
+freq = np.linspace(lower_freq, upper_freq, int(fft_size))
 dist = (freq - signal_freq) * c / (2 * slope)
 plot_dist = False
 
