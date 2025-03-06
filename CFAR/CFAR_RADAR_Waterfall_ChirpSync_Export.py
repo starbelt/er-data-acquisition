@@ -45,7 +45,7 @@ min_dist = 0
 freq_offset = 25e3
 
 img_size = 56
-autoQuit = False
+autoQuit = True
 range_threshold = -20
 
 start_time = datetime.datetime.now()  # Get start time
