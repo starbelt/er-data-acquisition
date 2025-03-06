@@ -137,7 +137,7 @@ sdr_pins.gpio_phaser_enable = True
 tdd.enable = False         # disable TDD to configure the registers
 tdd.sync_external = True
 tdd.startup_delay_ms = 0
-PRI_ms = ramp_time/1e3 + 0.5
+PRI_ms = ramp_time/1e3 + 0.01
 tdd.frame_length_ms = PRI_ms    # each chirp is spaced this far apart
 num_chirps = 1
 tdd.burst_count = num_chirps       # number of chirps in one continuous receive buffer
@@ -181,7 +181,7 @@ print("fft_size =", fft_size)
 # Pluto receive buffer size needs to be greater than total time for all chirps
 total_time = tdd.frame_length_ms * num_chirps   # time in ms
 print("Total Time for all Chirps:  ", total_time, "ms")
-buffer_time = total_time + total_time*.5
+buffer_time = total_time + total_time*.75
 # if buffer_time < 10:
 #     buffer_time = 10
 buffer_size = int(buffer_time*my_sdr.sample_rate/1000)
