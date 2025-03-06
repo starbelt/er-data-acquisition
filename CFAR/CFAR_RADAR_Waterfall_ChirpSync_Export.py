@@ -751,7 +751,7 @@ def update():
         peak_freq, peak_mag = find_strongest_peak(freq, data_to_use, minbin_freq, maxbin_freq)
         
         if peak_freq is not None and peak_mag > range_threshold:
-            peak_range = 155000 - (signal_freq + freq_offset) * c / (2 * slope)
+            peak_range = (peak_freq - (signal_freq + freq_offset)) * c / (2 * slope)
             win.distance_label.setText(f"Target Distance: {peak_range:.2f} m")
         else:
             win.distance_label.setText("Target Distance: N/A")
