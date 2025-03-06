@@ -645,7 +645,7 @@ def export_data_to_csv():
     for row in data_list:
         t_since_start = float(row[0])
         frequency = float(row[1])
-        if lower_freq/1.4 < frequency < upper_freq*1.4:
+        if lower_freq/1.3 < frequency < upper_freq*1.3:
             filtered_data[t_since_start].append(row)
     first_t_start = sorted(filtered_data.keys())[0]
     num_per_sample = len(filtered_data[first_t_start])
