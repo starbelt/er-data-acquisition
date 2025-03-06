@@ -614,39 +614,9 @@ win = Window()
 index = 0
 
 def downsample(data, target_size):
-    """Downsample data to target size with robust error handling"""
-    # Handle empty arrays
-    if len(data) == 0:
-        return np.zeros(target_size)
-        
-    # Handle case where data is smaller than target size
-    if len(data) < target_size:
-        # Pad with zeros to reach target size
-        print("Data input below target size")
-        padded = np.zeros(target_size)
-        padded[:len(data)] = data
-        return padded
-    
-    # Normal downsampling for when data is larger than target size
-    factor = max(1, len(data) // target_size)  # Ensure factor is at least 1
-    
-    # Calculate how many elements we can use (must be divisible by factor)
-    usable_size = (len(data) // factor) * factor
-    print("usable size: ", usable_size)
-    # Only use as many points as we can reshape properly
-    if usable_size > 0:
-        reshaped = np.reshape(data[:usable_size], (-1, factor))
-        downsampled = np.mean(reshaped, axis=1)
-        # Ensure we return exactly target_size elements
-        if len(downsampled) > target_size:
-            return downsampled[:target_size]
-        elif len(downsampled) < target_size:
-            padded = np.zeros(target_size)
-            padded[:len(downsampled)] = downsampled
-            return padded
-        return downsampled
-    else:
-        return np.zeros(target_size)
+    factor = len(data) // target_size
+    downsampled_data = np.mean(np.reshape(data[:factor * target_size], (-1, factor)), axis=1)
+    return downsampled_data
 
 def store_data(freq, s_dbfs):
     """ Stores the frequency and FFT magnitude data in a list
@@ -675,7 +645,7 @@ def export_data_to_csv():
     for row in data_list:
         t_since_start = float(row[0])
         frequency = float(row[1])
-        if lower_freq < frequency < upper_freq:
+        if 0 < frequency < sample_rate/2:
             filtered_data[t_since_start].append(row)
     first_t_start = sorted(filtered_data.keys())[0]
     num_per_sample = len(filtered_data[first_t_start])
