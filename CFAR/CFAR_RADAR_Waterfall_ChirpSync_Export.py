@@ -632,6 +632,7 @@ def export_data_to_csv():
     Returns:
         None
     """
+
     if not os.path.exists(image_path):
         os.makedirs(image_path)
     if not os.path.exists(file_path):
