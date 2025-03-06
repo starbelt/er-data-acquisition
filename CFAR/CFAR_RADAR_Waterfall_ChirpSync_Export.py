@@ -170,6 +170,7 @@ start_offset_samples = int(start_offset_time * sample_rate)
 power=8
 fft_size = int(2**power)
 num_samples_frame = int(tdd.frame_length_ms/1000*sample_rate)
+print("num_samples_frame: ", num_samples_frame)
 while num_samples_frame > fft_size:     
     power=power+1
     fft_size = int(2**power) 
