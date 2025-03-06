@@ -133,7 +133,7 @@ sdr_pins.gpio_phaser_enable = True
 tdd.enable = False         # disable TDD to configure the registers
 tdd.sync_external = True
 tdd.startup_delay_ms = 0
-PRI_ms = ramp_time/1e3 + 1.0
+PRI_ms = ramp_time/1e3 + 0.2
 tdd.frame_length_ms = PRI_ms    # each chirp is spaced this far apart
 num_chirps = 1
 tdd.burst_count = num_chirps       # number of chirps in one continuous receive buffer
@@ -310,6 +310,12 @@ class Window(QMainWindow): # type: ignore
         self.quit_button = QPushButton("Quit") # type: ignore[all]
         self.quit_button.pressed.connect(self.end_program)
         layout.addWidget(self.quit_button, 30, 0, 4, 4)
+        
+        #Distance Measurement Label
+        self.distance_label = QLabel("Target Distance: N/A") #type: ignore[all]
+        self.distance_label.setFont(font)  # Use the same font as other labels
+        self.distance_label.setAlignment(Qt.AlignHCenter)
+        layout.addWidget(self.distance_label, 3, 0, 1, 2)
         
         #CFAR Sliders
         self.cfar_bias = QSlider(Qt.Horizontal) # type: ignore[all]
@@ -645,7 +651,7 @@ def export_data_to_csv():
 def update():
     """ Updates the FFT in the window
 	"""
-    global index, end_state, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate
+    global index, end_state, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate, minbin_freq, maxbin_freq, slope, signal_freq, c, cfar_toggle
     label_style = {"color": "#FFF", "font-size": "14pt"}
     my_phaser._gpios.gpio_burst = 0
     my_phaser._gpios.gpio_burst = 1
@@ -666,12 +672,12 @@ def update():
             win_funct = np.ones(len(rx_bursts[burst]))
             burst_data[start_offset_samples:(start_offset_samples+good_ramp_samples)] = rx_bursts[burst]*win_funct
 
-            sp = np.absolute(np.fft.fft(burst_data))
-            sp = np.fft.fftshift(sp)
-            s_mag = np.abs(sp) / np.sum(win_funct)
-            s_mag = np.maximum(s_mag, 10 ** (-15))
-            s_dbfs = 20 * np.log10(s_mag / (2 ** 11))
-            store_data(freq, s_dbfs)
+        sp = np.absolute(np.fft.fft(burst_data))
+        sp = np.fft.fftshift(sp)
+        s_mag = np.abs(sp) / np.sum(win_funct)
+        s_mag = np.maximum(s_mag, 10 ** (-15))
+        s_dbfs = 20 * np.log10(s_mag / (2 ** 11))
+        store_data(freq, s_dbfs)
         bias = win.cfar_bias.value()
         num_guard_cells = win.cfar_guard.value()
         num_ref_cells = win.cfar_ref.value()
@@ -689,12 +695,24 @@ def update():
         if cfar_toggle:
             win.fft_curve.setData(freq, s_dbfs_cfar)
             win.img_array[0] = s_dbfs_cfar
+            data_to_use = s_dbfs_cfar
         else:
             win.fft_curve.setData(freq, s_dbfs)
             win.img_array[0] = s_dbfs
+            data_to_use = s_dbfs
+        
+        peak_freq, peak_mag = find_strongest_peak(freq, data_to_use, minbin_freq, maxbin_freq)
+        
+        if peak_freq is not None and peak_mag > -50:
+            peak_range = peak_freq - signal_freq * c / (2 * slope)
+            win.distance_label.setText(f"Target Distance: {peak_range:.2f} m")
+        else:
+            win.distance_label.setText("Target Distance: N/A")
+        
         win.imageitem.setLevels([win.low_slider.value(), win.high_slider.value()])
         win.imageitem.setImage(win.img_array, autoLevels=False)
         # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
+        
         
         
         if index > img_size+1:
