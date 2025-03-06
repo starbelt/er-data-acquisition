@@ -216,7 +216,7 @@ print("upper_freq: ", upper_freq)
 print("lower_freq: ", lower_freq)
 
 # Use the effective signal frequency in linspace
-freq = np.linspace(lower_freq, upper_freq, int(fft_size))
+freq = np.linspace(-lower_freq, upper_freq, int(fft_size))
 dist = (freq - effective_signal_freq) * c / (2 * slope)
 plot_dist = False
 
