@@ -210,7 +210,7 @@ print("minbin_freq: ", minbin_freq)
 print("upper_freq: ", upper_freq)
 print("lower_freq: ", lower_freq)
 # freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
-freq = np.linspace(lower_freq, upper_freq, int(fft_size))
+freq = np.linspace(lower_freq + freq_offset, upper_freq + freq_offset, int(fft_size))
 dist = (freq - signal_freq) * c / (2 * slope)
 plot_dist = False
 
