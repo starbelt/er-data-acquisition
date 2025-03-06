@@ -757,11 +757,12 @@ def update():
         
         
         
-        if index > img_size +1 and autoQuit:
+        if index > img_size +1:
             # win.quit_button.pressed.emit()
-            win.end_program()
+            if autoQuit:
+                win.end_program()
+                end_state = False
             print("enough data has been collected")
-            end_state = False
         if index == 1:
             win.fft_plot.enableAutoRange("xy", False)
         index += 1
