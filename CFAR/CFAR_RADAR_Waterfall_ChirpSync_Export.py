@@ -34,9 +34,9 @@ import cv2 # type: ignore
 sample_rate = 0.522e6
 center_freq = .55e9
 signal_freq = 100000
-rx_gain = 20   # must be between -3 and 70
+rx_gain = 60   # must be between -3 and 70
 output_freq = 10e9
-default_chirp_bw = 50e6
+default_chirp_bw = 250e6
 ramp_time = 450      # ramp time in us
 num_slices = 112 * 4  # number of slices in the waterfall plot
 max_dist = 89 * 2.54 / 100 # 89 inches to meters
