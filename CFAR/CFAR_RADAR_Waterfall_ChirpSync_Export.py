@@ -206,10 +206,10 @@ slope = BW / ramp_time_s
 # Apply offset to all frequency calculations
 effective_signal_freq = signal_freq
 
-upper_freq = (max_dist * 2 * slope / c) + effective_signal_freq + 1
-lower_freq = (min_dist * 2 * slope / c) + effective_signal_freq + 1
-maxbin_freq = (binmax * 2 * slope / c) + effective_signal_freq
-minbin_freq = (binmin * 2 * slope / c) + effective_signal_freq
+upper_freq = (max_dist * 2 * slope / c) + signal_freq
+lower_freq = (min_dist * 2 * slope / c) + signal_freq
+maxbin_freq = (binmax * 2 * slope / c) + signal_freq
+minbin_freq = (binmin * 2 * slope / c) + signal_freq
 
 print("maxbin_freq: ", maxbin_freq)
 print("minbin_freq: ", minbin_freq)
@@ -219,8 +219,8 @@ print("lower_freq: ", lower_freq)
 # Use the effective signal frequency in linspace
 # freq = np.linspace(lower_freq, upper_freq, int(fft_size))
 freq = np.linspace(-sample_rate/2, sample_rate/2, int(fft_size))
-dist = (freq - effective_signal_freq) * c / (2 * slope)
-plot_dist = False
+dist = (freq - signal_freq) * c / (2 * slope)
+plot_dist = True
 
 
 
