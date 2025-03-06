@@ -563,6 +563,10 @@ class Window(QMainWindow): # type: ignore
     def end_program(self):
         """ Gracefully shutsdown the program and Pluto
 		"""
+        global timer  # Access the global timer
+    
+        # Stop the timer first to prevent additional calls
+        timer.stop()
         my_sdr.tx_destroy_buffer()
         print("Program finished and Pluto Tx Buffer Cleared")
         # disable TDD and revert to non-TDD (standard) mode
@@ -758,7 +762,7 @@ def update():
         
         
         
-        if index > img_size +1:
+        if index > img_size +1 and end_state:
             # win.quit_button.pressed.emit()
             if autoQuit:
                 win.end_program()
