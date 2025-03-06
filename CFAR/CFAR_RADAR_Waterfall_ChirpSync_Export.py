@@ -43,6 +43,7 @@ max_dist = 89 * 2.54 / 100 # 89 inches to meters
 min_dist = 0
 
 img_size = 56
+autoQuit = False
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
@@ -678,7 +679,7 @@ def export_data_to_csv():
 def update():
     """ Updates the FFT in the window
 	"""
-    global index, end_state, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate, minbin_freq, maxbin_freq, slope, signal_freq, c, cfar_toggle
+    global index, end_state, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate, minbin_freq, maxbin_freq, slope, signal_freq, c, cfar_toggle, autoQuit
     label_style = {"color": "#FFF", "font-size": "14pt"}
     my_phaser._gpios.gpio_burst = 0
     my_phaser._gpios.gpio_burst = 1
@@ -742,7 +743,7 @@ def update():
         
         
         
-        if index > img_size+1:
+        if index > img_size+1 and autoQuit:
             # win.quit_button.pressed.emit()
             win.end_program()
             print("enough data has been collected")
