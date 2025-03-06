@@ -44,7 +44,7 @@ min_dist = 0
 
 img_size = 56
 autoQuit = False
-range_threshold = -20
+range_threshold = -50
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
@@ -203,6 +203,8 @@ upper_freq = (max_dist * 2 * slope / c) + signal_freq + 1
 lower_freq = (min_dist * 2 * slope / c) + signal_freq + 1
 maxbin_freq = (binmax * 2 * slope / c) + signal_freq + 1
 minbin_freq = (binmin * 2 * slope / c) + signal_freq + 1
+print("maxbin_freq: ", maxbin_freq)
+print("minbin_freq: ", minbin_freq)
 # freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
 freq = np.linspace(lower_freq, upper_freq , int(fft_size))
 dist = (freq - signal_freq) * c / (2 * slope)
