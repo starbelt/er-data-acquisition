@@ -31,7 +31,7 @@ from collections import defaultdict
 import cv2 # type: ignore
 
 '''Key Parameters'''
-sample_rate = 0.682e6
+sample_rate = 0.522e6
 center_freq = .07e9
 signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
