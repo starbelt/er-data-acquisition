@@ -757,7 +757,7 @@ def update():
         
         
         
-        if index > img_size and autoQuit:
+        if index > img_size +1 and autoQuit:
             # win.quit_button.pressed.emit()
             win.end_program()
             print("enough data has been collected")
