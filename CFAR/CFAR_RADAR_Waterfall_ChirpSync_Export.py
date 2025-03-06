@@ -758,14 +758,14 @@ def update():
         
         
         
-        if index > img_size+1 and autoQuit:
+        if index > img_size+5 and autoQuit:
             # win.quit_button.pressed.emit()
             win.end_program()
             print("enough data has been collected")
             end_state = False
         if index == 1:
             win.fft_plot.enableAutoRange("xy", False)
-        index += num_chirps
+        index += 1
 
 timer = QtCore.QTimer()
 timer.timeout.connect(update)
