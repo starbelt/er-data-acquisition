@@ -203,7 +203,7 @@ wavelength = c / output_freq
 slope = BW / ramp_time_s
 
 # Apply offset to all frequency calculations
-effective_signal_freq = signal_freq + freq_offset
+effective_signal_freq = signal_freq
 
 upper_freq = (max_dist * 2 * slope / c) + effective_signal_freq + 1
 lower_freq = (min_dist * 2 * slope / c) + effective_signal_freq + 1
