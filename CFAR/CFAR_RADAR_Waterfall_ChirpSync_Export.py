@@ -42,7 +42,7 @@ num_slices = 112 * 4  # number of slices in the waterfall plot
 max_dist = 89 * 2.54 / 100 # 89 inches to meters
 min_dist = 0
 
-freq_offset = 15.22e3
+freq_offset = 25e3
 
 img_size = 56
 autoQuit = False
@@ -206,10 +206,10 @@ slope = BW / ramp_time_s
 # Apply offset to all frequency calculations
 effective_signal_freq = signal_freq
 
-upper_freq = (max_dist * 2 * slope / c) + signal_freq
-lower_freq = (min_dist * 2 * slope / c) + signal_freq
-maxbin_freq = (binmax * 2 * slope / c) + signal_freq
-minbin_freq = (binmin * 2 * slope / c) + signal_freq
+upper_freq = (max_dist * 2 * slope / c) + signal_freq + freq_offset
+lower_freq = (min_dist * 2 * slope / c) + signal_freq + freq_offset
+maxbin_freq = (binmax * 2 * slope / c) + signal_freq + freq_offset
+minbin_freq = (binmin * 2 * slope / c) + signal_freq + freq_offset
 
 print("maxbin_freq: ", maxbin_freq)
 print("minbin_freq: ", minbin_freq)
@@ -483,7 +483,7 @@ class Window(QMainWindow): # type: ignore
         self.fft_plot.setTitle("Received Signal - Frequency Spectrum", **title_style)
         layout.addWidget(self.fft_plot, 0, 2, self.num_rows, 1)
         self.fft_plot.setYRange(-60, 0)
-        self.fft_plot.setXRange(lower_freq, upper_freq)
+        self.fft_plot.setXRange(-sample_rate/2, sample_rate/2)
 
         # Waterfall plot
         self.waterfall = pg.PlotWidget()
@@ -496,11 +496,10 @@ class Window(QMainWindow): # type: ignore
         self.imageitem.setLookupTable(lut)
         self.imageitem.setLevels([0,1])
         tr = QtGui.QTransform()
-        tr.translate(0,lower_freq)
-        tr.scale(1, (upper_freq - lower_freq) / fft_size)
+        tr.translate(0, -sample_rate/2)
+        tr.scale(1, sample_rate / fft_size)
         self.imageitem.setTransform(tr)
-        zoom_freq = 35e3
-        self.waterfall.setRange(yRange=(lower_freq, upper_freq))
+        self.waterfall.setRange(yRange=(-sample_rate/2, sample_rate/2))
         self.waterfall.setTitle("Waterfall Spectrum", **title_style)
         self.waterfall.setLabel("left", "Frequency", units="Hz", **label_style)
         self.waterfall.setLabel("bottom", "Time", units="sec", **label_style)
