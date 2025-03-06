@@ -243,7 +243,34 @@ my_sdr._ctx.set_timeout(30000)
 my_sdr._rx_init_channels()
 my_sdr.tx([iq, iq])
 
-
+def find_strongest_peak(frequencies, magnitudes, min_freq, max_freq):
+    """
+    Find the strongest peak within a specific frequency range.
+    
+    Args:
+        frequencies: Array of frequencies
+        magnitudes: Array of magnitude values
+        min_freq: Minimum frequency to consider
+        max_freq: Maximum frequency to consider
+        
+    Returns:
+        tuple: (peak_frequency, peak_magnitude) or (None, None) if no peak found
+    """
+    # Filter to frequency range
+    in_range = (frequencies >= min_freq) & (frequencies <= max_freq)
+    
+    if not np.any(in_range):
+        return None, None
+    
+    range_frequencies = frequencies[in_range]
+    range_magnitudes = magnitudes[in_range]
+    
+    # Find index of maximum magnitude
+    if len(range_magnitudes) > 0:
+        max_idx = np.argmax(range_magnitudes)
+        return range_frequencies[max_idx], range_magnitudes[max_idx]
+    
+    return None, None
 # %%
 """ Create QT GUI Window, Buttons, and Plots
 """
