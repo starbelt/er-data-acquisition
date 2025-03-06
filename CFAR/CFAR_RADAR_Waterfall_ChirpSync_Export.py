@@ -44,6 +44,7 @@ min_dist = 0
 
 img_size = 56
 autoQuit = False
+range_threshold = -20
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
@@ -679,7 +680,7 @@ def export_data_to_csv():
 def update():
     """ Updates the FFT in the window
 	"""
-    global index, end_state, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate, minbin_freq, maxbin_freq, slope, signal_freq, c, cfar_toggle, autoQuit
+    global index, end_state, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate, minbin_freq, maxbin_freq, slope, signal_freq, c, cfar_toggle, autoQuit, range_threshold
     label_style = {"color": "#FFF", "font-size": "14pt"}
     my_phaser._gpios.gpio_burst = 0
     my_phaser._gpios.gpio_burst = 1
@@ -731,7 +732,7 @@ def update():
         
         peak_freq, peak_mag = find_strongest_peak(freq, data_to_use, minbin_freq, maxbin_freq)
         
-        if peak_freq is not None and peak_mag > -50:
+        if peak_freq is not None and peak_mag > range_threshold:
             peak_range = peak_freq - signal_freq * c / (2 * slope)
             win.distance_label.setText(f"Target Distance: {peak_range:.2f} m")
         else:
