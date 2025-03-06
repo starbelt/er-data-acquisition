@@ -29,7 +29,6 @@ import os
 import adi # type: ignore
 from collections import defaultdict
 import cv2 # type: ignore
-from scipy import signal
 
 '''Key Parameters'''
 sample_rate = 0.522e6
@@ -259,28 +258,6 @@ iq = 1 * (i + 1j * q)
 my_sdr._ctx.set_timeout(30000)
 my_sdr._rx_init_channels()
 my_sdr.tx([iq, iq])
-
-def bandpass_filter(data, center_freq, bandwidth, fs):
-    """
-    Apply bandpass filter to focus on frequency range of interest
-    
-    Args:
-        data: Input signal
-        center_freq: Center frequency to focus on (Hz)
-        bandwidth: Width of band around center (Hz)
-        fs: Sample rate (Hz)
-    
-    Returns:
-        Filtered signal
-    """
-    # Design bandpass filter
-    nyq = 0.5 * fs
-    low = (center_freq - bandwidth/2) / nyq
-    high = (center_freq + bandwidth/2) / nyq
-    b, a = signal.butter(6, [max(0.001, low), min(0.999, high)], btype='band')
-    
-    # Apply filter
-    return signal.filtfilt(b, a, data)
 
 def find_strongest_peak(frequencies, magnitudes, min_freq, max_freq):
     """
@@ -728,16 +705,11 @@ def update():
     sum_data = chan1+chan2
     if end_state:
         # select just the linear portion of the last chirp
-        interest_center = signal_freq + 15000
-        interest_bw = 5000
-        
-        filtered_sum_data = bandpass_filter(sum_data, interest_center, interest_bw, sample_rate)
-        
         rx_bursts = np.zeros((num_chirps, good_ramp_samples), dtype=complex)
         for burst in range(num_chirps):
             start_index = start_offset_samples + burst*num_samples_frame
             stop_index = start_index + good_ramp_samples
-            rx_bursts[burst] = filtered_sum_data[start_index:stop_index]
+            rx_bursts[burst] = sum_data[start_index:stop_index]
             burst_data = np.ones(fft_size, dtype=complex)*1e-10
             #win_funct = np.blackman(len(rx_bursts[burst]))
             win_funct = np.ones(len(rx_bursts[burst]))
