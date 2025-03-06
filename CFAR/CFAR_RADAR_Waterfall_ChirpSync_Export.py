@@ -201,12 +201,12 @@ wavelength = c / output_freq
 slope = BW / ramp_time_s
 upper_freq = (max_dist * 2 * slope / c) + signal_freq + 1
 lower_freq = (min_dist * 2 * slope / c) + signal_freq + 1
-maxbin_freq = (binmax * 2 * slope / c) + signal_freq + 1
-minbin_freq = (binmin * 2 * slope / c) + signal_freq + 1
+maxbin_freq = (binmax * 2 * slope / c) + signal_freq
+minbin_freq = (binmin * 2 * slope / c) + signal_freq
 print("maxbin_freq: ", maxbin_freq)
 print("minbin_freq: ", minbin_freq)
 # freq = np.linspace(-sample_rate / 2, sample_rate / 2, int(fft_size))
-freq = np.linspace(lower_freq, upper_freq , int(fft_size))
+freq = np.linspace(lower_freq + signal_freq, upper_freq , int(fft_size))
 dist = (freq - signal_freq) * c / (2 * slope)
 plot_dist = False
 
