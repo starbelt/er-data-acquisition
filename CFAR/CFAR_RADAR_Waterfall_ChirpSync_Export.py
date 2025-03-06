@@ -46,7 +46,7 @@ freq_offset = 25e3
 
 img_size = 56
 autoQuit = False
-range_threshold = -50
+range_threshold = -20
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
@@ -751,7 +751,7 @@ def update():
         peak_freq, peak_mag = find_strongest_peak(freq, data_to_use, minbin_freq, maxbin_freq)
         
         if peak_freq is not None and peak_mag > range_threshold:
-            peak_range = peak_freq - (signal_freq + freq_offset) * c / (2 * slope)
+            peak_range = 155000 - (signal_freq + freq_offset) * c / (2 * slope)
             win.distance_label.setText(f"Target Distance: {peak_range:.2f} m")
         else:
             win.distance_label.setText("Target Distance: N/A")
