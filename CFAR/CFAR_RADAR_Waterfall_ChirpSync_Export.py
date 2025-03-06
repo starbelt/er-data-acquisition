@@ -49,7 +49,7 @@ start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
 c = 3e8
 
-binmin = 38 # inches
+binmin = 0 # inches
 binmin = binmin * 2.54 / 100  # convert to meters
 binmax = 57 # inches
 binmax = binmax * 2.54 / 100  # convert to meters
