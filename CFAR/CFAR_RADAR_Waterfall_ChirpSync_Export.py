@@ -32,7 +32,7 @@ import cv2 # type: ignore
 
 '''Key Parameters'''
 sample_rate = 0.522e6
-center_freq = .07e9
+center_freq = .1e9
 signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
@@ -181,7 +181,7 @@ print("fft_size =", fft_size)
 # Pluto receive buffer size needs to be greater than total time for all chirps
 total_time = tdd.frame_length_ms * num_chirps   # time in ms
 print("Total Time for all Chirps:  ", total_time, "ms")
-buffer_time = total_time + 1#total_time*.75
+buffer_time = total_time + total_time*.75
 # if buffer_time < 10:
 #     buffer_time = 10
 buffer_size = int(buffer_time*my_sdr.sample_rate/1000)
