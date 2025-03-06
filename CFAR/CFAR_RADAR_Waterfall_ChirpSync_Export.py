@@ -36,7 +36,7 @@ center_freq = .55e9
 signal_freq = 100000
 rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
-default_chirp_bw = 750e6
+default_chirp_bw = 50e6
 ramp_time = 450      # ramp time in us
 num_slices = 112 * 4  # number of slices in the waterfall plot
 max_dist = 89 * 2.54 / 100 # 89 inches to meters
@@ -220,7 +220,7 @@ print("lower_freq: ", lower_freq)
 # freq = np.linspace(lower_freq, upper_freq, int(fft_size))
 freq = np.linspace(-sample_rate/2, sample_rate/2, int(fft_size))
 dist = (freq - signal_freq) * c / (2 * slope)
-plot_dist = True
+plot_dist = False
 
 
 
