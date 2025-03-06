@@ -32,7 +32,7 @@ import cv2 # type: ignore
 
 '''Key Parameters'''
 sample_rate = 0.682e6
-center_freq = 100e6
+center_freq = .25e9
 signal_freq = 100e3
 rx_gain = 20   # must be between -3 and 70
 output_freq = 10e9
