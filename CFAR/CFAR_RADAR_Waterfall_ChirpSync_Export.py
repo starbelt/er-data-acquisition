@@ -42,6 +42,8 @@ num_slices = 112 * 4  # number of slices in the waterfall plot
 max_dist = 89 * 2.54 / 100 # 89 inches to meters
 min_dist = 0
 
+freq_offset = 15.22e3
+
 img_size = 56
 autoQuit = False
 range_threshold = -50
@@ -684,7 +686,7 @@ def export_data_to_csv():
 def update():
     """ Updates the FFT in the window
 	"""
-    global index, end_state, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate, minbin_freq, maxbin_freq, slope, signal_freq, c, cfar_toggle, autoQuit, range_threshold
+    global index, end_state, plot_threshold, freq, dist, plot_dist, ramp_time_s, sample_rate, minbin_freq, maxbin_freq, slope, signal_freq, c, cfar_toggle, autoQuit, range_threshold, freq_offset
     label_style = {"color": "#FFF", "font-size": "14pt"}
     my_phaser._gpios.gpio_burst = 0
     my_phaser._gpios.gpio_burst = 1
@@ -737,7 +739,7 @@ def update():
         peak_freq, peak_mag = find_strongest_peak(freq, data_to_use, minbin_freq, maxbin_freq)
         
         if peak_freq is not None and peak_mag > range_threshold:
-            peak_range = peak_freq - signal_freq * c / (2 * slope)
+            peak_range = peak_freq - (signal_freq + freq_offset) * c / (2 * slope)
             win.distance_label.setText(f"Target Distance: {peak_range:.2f} m")
         else:
             win.distance_label.setText("Target Distance: N/A")
