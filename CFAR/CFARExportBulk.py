@@ -715,7 +715,7 @@ def export_data_to_csv():
         else:
             calc_dist = 0.0
             
-        image_file_name = f"{image_path}/{st}_truedist{true_dist}_calcdist{calc_dist}_bin{measure_distance}m_img{img_idx+1}.png"
+        image_file_name = f"{image_path}/{st}_truedist{true_dist:.3f}_calcdist{calc_dist:.3f}_bin{measure_distance}m_img{img_idx+1}.png"
         downsampled_data = []
         
         # Process data for this image
