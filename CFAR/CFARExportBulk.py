@@ -678,7 +678,7 @@ def export_data_to_csv():
         for row in filtered_data[time_since_start]:
             t_since_start = float(row[0])
             magnitude = float(row[2])
-            if len(row > 3) and row[3] is not None:
+            if (len(row) > 3) and row[3] is not None:
                 ranges_per_time[t_since_start].append(float(row[3]))
             shifted_magnitude = (magnitude - magnitude_min) / (magnitude_max - magnitude_min) * (img_size+1)
             image_data[t_since_start].append(shifted_magnitude)
