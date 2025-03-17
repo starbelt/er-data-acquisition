@@ -31,9 +31,16 @@ from collections import defaultdict
 import cv2 # type: ignore
 
 '''Key Parameters'''
-true_dist = 12.0 # inches
+true_dist = 38.5 # inches
 true_dist = true_dist * 2.54 / 100  # convert to meters
 
+#Class bins
+namebin = 38.5 # inches
+namebinup = namebin+5.91 # inches
+namebin = namebin * 2.54 / 100  # convert to meters
+namebinup = namebinup * 2.54 / 100  # convert to meters
+
+# Radar parameters
 sample_rate = 0.522e6
 center_freq = .55e9
 signal_freq = 100000
@@ -48,7 +55,7 @@ min_dist = 0
 freq_offset = 25e3
 
 img_size = 56
-num_img = 5
+num_img = 25
 autoQuit = True
 range_threshold = -20
 
@@ -60,7 +67,7 @@ binmin = 0 # inches
 binmin = binmin * 2.54 / 100  # convert to meters
 binmax = 89 # inches
 binmax = binmax * 2.54 / 100  # convert to meters
-measure_distance = f"{binmin:.2f}-{binmax:.2f}m" 
+measure_distance = f"{namebin:.2f}-{namebinup:.2f}" 
 image_path = f"DataSet/{measure_distance}/Images"
 file_path = f"DataSet/{measure_distance}/CSV"
 end_state = True
