@@ -206,6 +206,8 @@ print("buffer_time:", buffer_time, " ms")
 c = 3e8
 wavelength = c / output_freq
 slope = BW / ramp_time_s
+R_res = c / (2 * BW)
+print(f"Range Resolution: {R_res:.2f} m")
 
 # Apply offset to all frequency calculations
 effective_signal_freq = signal_freq
