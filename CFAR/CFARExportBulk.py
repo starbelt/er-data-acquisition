@@ -795,6 +795,9 @@ def update():
         win.imageitem.setImage(win.img_array, autoLevels=False)
         # Vars to export: freq, s_dbfs, s_dbfs_cfar, s_dbfs_threshold
         
+        if (index + 15) % img_size == 0:
+            print(f"Image {(index+16)//img_size} samples gathered")
+        
         if index > (img_size * num_img) + num_img and end_state:
             if autoQuit:
                 win.end_program()
