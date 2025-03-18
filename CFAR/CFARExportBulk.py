@@ -31,11 +31,11 @@ from collections import defaultdict
 import cv2 # type: ignore
 
 '''Key Parameters'''
-true_dist = 17.0 # inches
+true_dist = 26.5 # inches
 true_dist = true_dist * 2.54 / 100  # convert to meters
 
 #Class bins
-namebin = 14.5 # inches
+namebin = 26.5 # inches
 namebinup = namebin+5.91 # inches
 namebin = namebin * 2.54 / 100  # convert to meters
 namebinup = namebinup * 2.54 / 100  # convert to meters
