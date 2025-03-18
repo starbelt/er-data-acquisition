@@ -31,11 +31,11 @@ from collections import defaultdict
 import cv2 # type: ignore
 
 '''Key Parameters'''
-true_dist = 66 # inches
+true_dist = 17 # inches
 true_dist = true_dist * 2.54 / 100  # convert to meters
 
 #Class bins
-namebin = 62.5 # inches
+namebin = 17.0 # inches
 namebinup = namebin+5.91 # inches
 namebin = namebin * 2.54 / 100  # convert to meters
 namebinup = namebinup * 2.54 / 100  # convert to meters
@@ -62,7 +62,7 @@ range_threshold = -20
 
 start_time = datetime.datetime.now()  # Get start time
 data_list = []  # list to store data for export
-c = 3e8
+c = 2.99792458e8
 
 binmin = 0 # inches
 binmin = binmin * 2.54 / 100  # convert to meters
