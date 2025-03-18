@@ -42,7 +42,7 @@ namebinup = namebinup * 2.54 / 100  # convert to meters
 
 #Image Settings
 img_size = 56
-num_img = 300
+num_img = 25
 autoQuit = True
 
 # Radar parameters
