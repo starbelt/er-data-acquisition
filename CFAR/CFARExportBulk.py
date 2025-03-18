@@ -69,6 +69,7 @@ binmin = binmin * 2.54 / 100  # convert to meters
 binmax = 89 # inches
 binmax = binmax * 2.54 / 100  # convert to meters
 measure_distance = f"{namebin:.2f}-{namebinup:.2f}" 
+measure_distance = "testing"
 image_path = f"DataSet/{measure_distance}/Images"
 file_path = f"DataSet/{measure_distance}/CSV"
 end_state = True
