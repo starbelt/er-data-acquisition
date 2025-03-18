@@ -40,6 +40,11 @@ namebinup = namebin+5.91 # inches
 namebin = namebin * 2.54 / 100  # convert to meters
 namebinup = namebinup * 2.54 / 100  # convert to meters
 
+#Image Settings
+img_size = 56
+num_img = 25
+autoQuit = True
+
 # Radar parameters
 sample_rate = 0.522e6
 center_freq = .55e9
@@ -53,10 +58,6 @@ max_dist = 89 * 2.54 / 100 # 89 inches to meters
 min_dist = 0
 
 freq_offset = 25e3
-
-img_size = 56
-num_img = 25
-autoQuit = True
 range_threshold = -20
 
 start_time = datetime.datetime.now()  # Get start time
