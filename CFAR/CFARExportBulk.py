@@ -31,7 +31,7 @@ from collections import defaultdict
 import cv2 # type: ignore
 
 '''Key Parameters'''
-true_dist = 29 # inches
+true_dist = 28.5 # inches
 true_dist = true_dist * 2.54 / 100  # convert to meters
 
 #Class bins
