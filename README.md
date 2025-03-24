@@ -128,6 +128,14 @@ This script plays back previously recorded data from the data export script. It 
 python CFAR/CFAR_RADAR_Waterfall_ChirpSync_Playback.py
 ```
 
+### CFAR Radar Waterfall with Bulk Export
+
+This script initializes and configures the SDR and Phaser devices to perform radar signal acquisition with CFAR filtering. It's designed for collecting multiple sets of data for batch processing, including target detection, distance measurement, and automatic program termination after collecting a specified number of samples. Used to build a dataset.
+
+```sh
+python CFAR/CFARExportBulk.py
+```
+
 ### Target Detection dbfs
 
 This helper script performs target detection using dBFS values.
